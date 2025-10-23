@@ -3,7 +3,8 @@ Total Time: 00
 
 ## TODO:
 
-- 
+## Possible optimizations:
+- [Shrinko8](https://github.com/thisismypassport/shrinko8)
 
 ---
 
