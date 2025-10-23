@@ -4,6 +4,7 @@ __lua__
 -- breakout clone
 -- by pixelrip
 
+#include src/utilities.lua
 #include src/paddle.lua
 #include src/main.lua
 

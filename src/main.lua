@@ -1,4 +1,5 @@
 function _init()
+    paddle = Paddle.new(64,120)
 end
 
 function _update()
