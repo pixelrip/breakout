@@ -1,4 +1,13 @@
 function _init()
+    arena = Arena.new({
+        x = 0,
+        y = 0,
+        width = 128,
+        height = 128,
+        wall_thickness = 2,
+        color = 10
+    })
+
     paddle = Paddle.new({
         x = 64,
         y = 120
@@ -11,6 +20,7 @@ function _init()
         dy = 0
     })
 
+    world:add(arena)
     world:add(paddle)
     world:add(ball)
 end
