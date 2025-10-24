@@ -49,8 +49,8 @@ function Rectangle:draw()
     -- draw the 4 lines connecting the corners
     -- this draws a hollow rect
     line(tr_x, tr_y, tl_x, tl_y, self.color) -- top
-    line(br_x, br_y, tr_x, tr_y, self.color) -- right
     line(bl_x, bl_y, br_x, br_y, self.color) -- bottom
+    line(br_x, br_y, tr_x, tr_y, self.color) -- right
     line(tl_x, tl_y, bl_x, bl_y, self.color) -- left
 
     pset(tl_x, tl_y, 8) -- top left
