@@ -10,13 +10,17 @@ function Rectangle.new(owner, opts)
     self.owner = owner
     self.angle = opts.angle or 0
     self.color = opts.color or 7
+    self.corners = {
+        top_left = {}, -- top-left
+        top_right = {}, -- top-right
+        bottom_right = {}, -- bottom-right
+        bottom_left = {}  -- bottom-left
+    }
 
     return self
 end
 
-function Rectangle:draw()
-
-    -- Gets rotation compnent; fallback if there is not one
+function Rectangle:update()
     local rotation = self.owner:get_component(Rotation)
     local angle = 0
 
@@ -36,25 +40,33 @@ function Rectangle:draw()
     local v1x, v1y = hw*c, hw*s
     local v2x, v2y = -hh*s, hh*c
 
-    -- calculate the 4 absolute corner positions
-    local bl_x = self.owner.x - v1x + v2x
-    local bl_y = self.owner.y - v1y + v2y
-    local br_x = self.owner.x + v1x + v2x
-    local br_y = self.owner.y + v1y + v2y
-    local tr_x = self.owner.x + v1x - v2x
-    local tr_y = self.owner.y + v1y - v2y
-    local tl_x = self.owner.x - v1x - v2x
-    local tl_y = self.owner.y - v1y - v2y
+    -- update corner positions
+    self.corners.top_left = {-v1x - v2x, -v1y - v2y} -- top-left
+    self.corners.top_right = { v1x - v2x,  v1y - v2y} -- top-right
+    self.corners.bottom_right = { v1x + v2x,  v1y + v2y} -- bottom-right
+    self.corners.bottom_left = {-v1x + v2x, -v1y + v2y} -- bottom-left
 
-    -- draw the 4 lines connecting the corners
-    -- this draws a hollow rect
-    line(tr_x, tr_y, tl_x, tl_y, self.color) -- top
-    line(bl_x, bl_y, br_x, br_y, self.color) -- bottom
-    line(br_x, br_y, tr_x, tr_y, self.color) -- right
-    line(tl_x, tl_y, bl_x, bl_y, self.color) -- left
+end
 
-    pset(tl_x, tl_y, 8) -- top left
-    pset(tr_x, tr_y, 9) -- top right
-    pset(br_x, br_y, 10) -- bottom right
-    pset(bl_x, bl_y, 11) -- bottom left
+function Rectangle:draw()
+    local x = self.owner.x
+    local y = self.owner.y
+
+    -- draw the rectangle using lines between corners
+    local tl = self.corners.top_left
+    local tr = self.corners.top_right
+    local br = self.corners.bottom_right
+    local bl = self.corners.bottom_left
+
+    -- draw lines
+    line(x + tl[1], y + tl[2], x + tr[1], y + tr[2], 1) -- top edge
+    line(x + tr[1], y + tr[2], x + br[1], y + br[2], 0) -- right edge
+    line(x + br[1], y + br[2], x + bl[1], y + bl[2], 3) -- bottom edge
+    line(x + bl[1], y + bl[2], x + tl[1], y + tl[2], 4) -- left edge
+
+    -- draw corners for debugging
+    pset(x + tl[1], y + tl[2], 8) -- top-left
+    pset(x + tr[1], y + tr[2], 9) -- top-right
+    pset(x + br[1], y + br[2], 10) -- bottom-right
+    pset(x + bl[1], y + bl[2], 11) -- bottom-left
 end
