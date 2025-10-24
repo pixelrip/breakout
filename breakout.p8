@@ -11,13 +11,16 @@ __lua__
 -- Components
 #include src/components/rotation.lua
 #include src/components/rectangle.lua
+#include src/components/circle.lua
 #include src/components/mover.lua
+#include src/components/gravity.lua
 #include src/components/input_mover.lua
 #include src/components/input_rotater.lua
 
 -- Entities
 #include src/entities/base/base.lua
 #include src/entities/paddle.lua
+#include src/entities/ball.lua
 
 -- Main game loops
 #include src/main.lua

@@ -4,7 +4,15 @@ function _init()
         y = 120
     })
 
+    ball = Ball.new({
+        x = 64,
+        y = 60,
+        dx = 0,
+        dy = 0
+    })
+
     world:add(paddle)
+    world:add(ball)
 end
 
 function _update()
