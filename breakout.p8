@@ -16,6 +16,8 @@ __lua__
 #include src/components/gravity.lua
 #include src/components/input_mover.lua
 #include src/components/input_rotater.lua
+#include src/components/circle_collider.lua
+#include src/components/rotation_rectangle_collider.lua
 
 -- Entities
 #include src/entities/base/base.lua

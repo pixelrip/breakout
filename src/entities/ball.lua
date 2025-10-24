@@ -36,6 +36,9 @@ function Ball.new(opts)
         radius = Ball.RADIUS,
         color = 7
     }))
+    self:add_component(CircleCollider.new(self, {
+        r = Ball.RADIUS + 2
+    }))
 
     return self
 end

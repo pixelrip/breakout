@@ -4,6 +4,8 @@
 Rectangle = {}
 Rectangle.__index = Rectangle
 
+Rectangle.DEBUG = false
+
 function Rectangle.new(owner, opts)
     local self = setmetatable({}, Rectangle)
 
@@ -59,14 +61,16 @@ function Rectangle:draw()
     local bl = self.corners.bottom_left
 
     -- draw lines
-    line(x + tl[1], y + tl[2], x + tr[1], y + tr[2], 1) -- top edge
-    line(x + tr[1], y + tr[2], x + br[1], y + br[2], 0) -- right edge
-    line(x + br[1], y + br[2], x + bl[1], y + bl[2], 3) -- bottom edge
-    line(x + bl[1], y + bl[2], x + tl[1], y + tl[2], 4) -- left edge
+    line(x + tl[1], y + tl[2], x + tr[1], y + tr[2], self.color) -- top edge
+    line(x + tr[1], y + tr[2], x + br[1], y + br[2], self.color) -- right edge
+    line(x + br[1], y + br[2], x + bl[1], y + bl[2], self.color) -- bottom edge
+    line(x + bl[1], y + bl[2], x + tl[1], y + tl[2], self.color) -- left edge
 
     -- draw corners for debugging
-    pset(x + tl[1], y + tl[2], 8) -- top-left
-    pset(x + tr[1], y + tr[2], 9) -- top-right
-    pset(x + br[1], y + br[2], 10) -- bottom-right
-    pset(x + bl[1], y + bl[2], 11) -- bottom-left
+    if self.DEBUG then 
+        pset(x + tl[1], y + tl[2], 8) -- top-left
+        pset(x + tr[1], y + tr[2], 9) -- top-right
+        pset(x + br[1], y + br[2], 10) -- bottom-right
+        pset(x + bl[1], y + bl[2], 11) -- bottom-left
+    end
 end
