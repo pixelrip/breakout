@@ -38,10 +38,10 @@ function Arena:draw()
     rectfill(self.x, self.y, self.x + t, self.y + self.h, self.color)
     
     -- Top wall
-    rectfill(self.x, self.y, self.x + self.w, self.y + t, self.color)
+    rectfill(self.x, self.y, self.x + self.w - 1, self.y + t, self.color)
     
     -- Right wall
-    rectfill(self.x + self.w - 1 - t, self.y, self.x + self.w, self.y + self.h, self.color)
+    rectfill(self.x + self.w - 1 - t, self.y, self.x + self.w - 1, self.y + self.h, self.color)
     
     -- Bottom is open (no wall)
 end
