@@ -16,18 +16,21 @@ end
 
 function Rectangle:draw()
 
-    -- TODO: Currently requires a rotation component,
-    -- but probably should be able to render a rectangle
-    -- without one.
+    -- Gets rotation compnent; fallback if there is not one
     local rotation = self.owner:get_component(Rotation)
+    local angle = 0
+
+    if rotation != nil then
+        angle = rotation.angle
+    end
 
     local hw = self.owner.w / 2 -- half-width
     local hh = self.owner.h / 2 -- half-height
     
     -- pre-calculate sin/cos
     -- rotation.angle is in PICO-8's 0-1 format
-    local c = cos(rotation.angle)
-    local s = sin(rotation.angle)
+    local c = cos(angle)
+    local s = sin(angle)
 
     -- calculate the 4 corner vectors
     local v1x, v1y = hw*c, hw*s
