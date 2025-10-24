@@ -13,4 +13,3 @@ function CircleCollider.new(owner, opts)
 
     return self
 end
-
