@@ -11,6 +11,8 @@ __lua__
 -- Components
 #include src/components/rotation.lua
 #include src/components/rectangle.lua
+#include src/components/mover.lua
+#include src/components/input_mover.lua
 #include src/components/input_rotater.lua
 
 -- Entities

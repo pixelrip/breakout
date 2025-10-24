@@ -11,6 +11,9 @@ Paddle.H = 4
 Paddle.MAX_ANGLE = 0.08 -- max angle
 Paddle.ROTATION_SPEED = 0.01 -- 0.01
 Paddle.SNAP_SPEED = 0.04
+Paddle.ACCELERATION = 0.5
+Paddle.MAX_SPEED = 2
+Paddle.FRICTION = 0.1
 
 
 function Paddle.new(opts) 
@@ -30,6 +33,15 @@ function Paddle.new(opts)
     }))
     self:add_component(Rectangle.new(self, {
         color = 7
+    }))
+    self:add_component(Mover.new(self, {
+        dx = 0,
+        dy = 0,
+        max_speed = Paddle.MAX_SPEED,
+        friction = Paddle.FRICTION
+    }))
+    self:add_component(InputMover.new(self, {
+        acceleration = Paddle.ACCELERATION
     }))
     self:add_component(InputRotater.new(self, {
         max_angle = Paddle.MAX_ANGLE,
