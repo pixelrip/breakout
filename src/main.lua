@@ -1,14 +1,22 @@
 function _init()
-    paddle = Paddle.new(64,120)
+    paddle = Paddle.new({
+        x = 64,
+        y = 120
+    })
+
+    world:add(paddle)
 end
 
 function _update()
-    paddle:update()
+    for e in all(world.entities) do
+        e:update()
+    end
 end
 
 function _draw()
     cls(2)
-    print('breakout', 2, 2, 7)
 
-    paddle:draw()
+    for e in all(world.entities) do
+        e:draw()
+    end
 end

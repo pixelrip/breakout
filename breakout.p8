@@ -4,8 +4,20 @@ __lua__
 -- breakout clone
 -- by pixelrip
 
+-- Helpers
 #include src/utilities.lua
-#include src/paddle.lua
+#include src/world.lua
+
+-- Components
+#include src/components/rotation.lua
+#include src/components/rectangle.lua
+#include src/components/input_rotater.lua
+
+-- Entities
+#include src/entities/base/base.lua
+#include src/entities/paddle.lua
+
+-- Main game loops
 #include src/main.lua
 
 __gfx__
