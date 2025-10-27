@@ -9,8 +9,8 @@ function Mover.new(owner, opts)
     self.owner = owner
     
     -- Properties
-    self.dx = opts.dx or 0
-    self.dy = opts.dy or 0
+    self.vx = opts.vx or 0
+    self.vy = opts.vy or 0
     self.max_speed = opts.max_speed or 2
     self.friction = opts.friction or 0.1
 
@@ -19,24 +19,24 @@ end
 
 function Mover:update()
     -- Apply velocity to position
-    self.owner.x += self.dx
-    self.owner.y += self.dy
+    self.owner.x += self.vx
+    self.owner.y += self.vy
 
-    -- Apply friction to dx
-    if self.dx > 0 then
-        self.dx = max(0, self.dx - self.friction)
-    elseif self.dx < 0 then
-        self.dx = min(0, self.dx + self.friction)
+    -- Apply friction to vx
+    if self.vx > 0 then
+        self.vx = max(0, self.vx - self.friction)
+    elseif self.vx < 0 then
+        self.vx = min(0, self.vx + self.friction)
     end
 
-    -- Apply friction to dy
-    if self.dy > 0 then
-        self.dy = max(0, self.dy - self.friction)
-    elseif self.dy < 0 then
-        self.dy = min(0, self.dy + self.friction)
+    -- Apply friction to vy
+    if self.vy > 0 then
+        self.vy = max(0, self.vy - self.friction)
+    elseif self.vy < 0 then
+        self.vy = min(0, self.vy + self.friction)
     end
 
     -- Clamp to max_speed
-    self.dx = mid(-self.max_speed, self.dx, self.max_speed)
-    self.dy = mid(-self.max_speed, self.dy, self.max_speed)
+    self.vx = mid(-self.max_speed, self.vx, self.max_speed)
+    self.vy = mid(-self.max_speed, self.vy, self.max_speed)
 end

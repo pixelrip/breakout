@@ -18,8 +18,8 @@ function _init()
     ball = Ball.new({
         x = 64,
         y = 60,
-        dx = 0,
-        dy = 0
+        vx = 0,
+        vy = 0
     })
 
     world:add(arena)
@@ -36,17 +36,6 @@ end
 function _draw()
     cls(2)
     
-    -- DEBUG
-    if DEBUG then
-        local _paddle_rotation = paddle:get_component(Rotation)
-
-        print("paddle x:  "..paddle.x, 3, 3, 7)
-        print("paddle y:  "..paddle.y, 3, 9, 7)
-        print("paddle x:  "..paddle.w, 3, 15, 7)
-        print("paddle y:  "..paddle.h, 3, 21, 7)
-        print("paddle a:  ".._paddle_rotation.angle, 3, 27, 7)
-    end
-
     for e in all(world.entities) do
         e:draw()
     end

@@ -24,8 +24,8 @@ function Ball.new(opts)
         
     -- compose behavior with components
     self:add_component(Mover.new(self, {
-        dx = opts.dx or 0,
-        dy = opts.dy or 0,
+        vx = opts.vx or 0,
+        vy = opts.vy or 0,
         max_speed = Ball.MAX_SPEED,
         friction = Ball.FRICTION
     }))

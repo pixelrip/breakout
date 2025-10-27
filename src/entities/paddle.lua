@@ -35,8 +35,8 @@ function Paddle.new(opts)
         color = 7
     }))
     self:add_component(Mover.new(self, {
-        dx = 0,
-        dy = 0,
+        vx = 0,
+        vy = 0,
         max_speed = Paddle.MAX_SPEED,
         friction = Paddle.FRICTION
     }))

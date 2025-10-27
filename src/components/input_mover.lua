@@ -24,10 +24,10 @@ function InputMover:update()
 
     -- Apply acceleration based on input
     if left then
-        mover.dx -= self.acceleration
+        mover.vx -= self.acceleration
     end
     
     if right then
-        mover.dx += self.acceleration
+        mover.vx += self.acceleration
     end
 end
