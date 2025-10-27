@@ -12,7 +12,20 @@ function Circle.new(owner, opts)
     self.radius = opts.radius or 2
     self.color = opts.color or 7
 
+    self.top = owner.y - self.radius
+    self.bottom = owner.y + self.radius
+    self.left = owner.x - self.radius
+    self.right = owner.x + self.radius
+
     return self
+end
+
+function Circle:update()
+    -- Update bounding box
+    self.top = self.owner.y - self.radius
+    self.bottom = self.owner.y + self.radius
+    self.left = self.owner.x - self.radius
+    self.right = self.owner.x + self.radius
 end
 
 function Circle:draw()
