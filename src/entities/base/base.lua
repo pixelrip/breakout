@@ -12,8 +12,6 @@ function Entity.new(opts)
     
     self.x = opts.x or 0
     self.y = opts.y or 0
-    self.w = opts.w or 0
-    self.h = opts.h or 0
 
     -- Component host fields
     self.components = {}

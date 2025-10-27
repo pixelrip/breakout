@@ -1,6 +1,7 @@
 DEBUG = true
 
 function _init()
+    --[[
     arena = Arena.new({
         x = 0,
         y = 0,
@@ -9,8 +10,9 @@ function _init()
         wall_thickness = 2,
         color = 10
     })
+    ]]--
 
-    paddle = Paddle.new({
+    player = Player.new({
         x = 64,
         y = 120
     })
@@ -22,8 +24,8 @@ function _init()
         vy = 0
     })
 
-    world:add(arena)
-    world:add(paddle)
+    --world:add(arena)
+    world:add(player)
     world:add(ball)
 end
 

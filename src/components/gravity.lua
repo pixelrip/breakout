@@ -19,5 +19,5 @@ function Gravity:update()
     local mover = self.owner:get_component(Mover)
 
     -- Apply gravity to vertical velocity
-    mover.dy += self.gravity_strength
+    mover.vy += self.gravity_strength
 end

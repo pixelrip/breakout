@@ -16,8 +16,6 @@ function Ball.new(opts)
     local self = Entity.new({
         x = opts.x or 64,
         y = opts.y or 60,
-        w = Ball.RADIUS * 2,
-        h = Ball.RADIUS * 2
     })
 
     setmetatable(self, Ball)
@@ -36,9 +34,12 @@ function Ball.new(opts)
         radius = Ball.RADIUS,
         color = 7
     }))
+    
+    --[[
     self:add_component(CircleCollider.new(self, {
         r = Ball.RADIUS + 2
     }))
+    ]]--
 
     return self
 end
