@@ -12,13 +12,17 @@ Total Time: 00
 
 ## Daily Notes
 
+### Day 2: 2025-10-27
+- Took a step back and got a better understanding of the actual physics I need. Put together a proof of concept here: https://github.com/pixelrip/ball-platform-physics
+- WIP: Refactoring this code entirely
+
+
 ### Day 1: 2025-10-24
 
-- Time worked: 9a -> 
+- Time worked: 4hrs
 - Proof of concept for rotating paddle
 - Futzing with hybrid component-based architecture, probably overkill and I run the risk of token limitats--but good for learning
 - Created Mover and InputMover component, integrated with paddle
 - Created Ball entity and added some pinball style physics
 - Created Arena entity which is basically just visual right now (but adjustable)
-- 
 
