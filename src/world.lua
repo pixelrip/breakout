@@ -6,7 +6,7 @@ world = {
 
 function world:add(e, type)
     local type = type or false
-    
+
     add(self.entities, e)
 
     -- Add to specific lists
@@ -21,21 +21,10 @@ function world:update()
     for e in all(self.entities) do
         e:update()
     end
-
-    -- Check for collisions
-    self:check_ball_player_collisions()
 end
 
 function world:draw()
     for e in all(self.entities) do
         e:draw()
-    end
-end
-
-function world:check_ball_player_collisions()
-    for b in all(self.balls) do
-        for p in all(self.players) do
-            -- TODO
-        end
     end
 end
