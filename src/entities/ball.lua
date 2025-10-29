@@ -19,10 +19,10 @@ function Ball.new(opts)
     self.vy = 0
     self.r = opts.r or 2
     
-    self:_update_bounds()
-
     self.color = opts.color or 7
     self.gravity = opts.gravity or 0.2
+    
+    self:_update_bounds()
 
     return self
 end
@@ -41,7 +41,13 @@ function Ball:update()
     -- update bounds
     self:_update_bounds()
 
-    -- TODO: check paddle collision
+    -- Check paddle collision
+    for p in all(world.players) do
+        local py = self:_check_paddle_collision(p)
+        if py then
+            self:_on_paddle_collision(p, py, prev_vy)
+        end
+    end
 end
 
 function Ball:draw()
@@ -49,35 +55,34 @@ function Ball:draw()
     pset(self.x, self.y, 8)
 end
 
-function Ball:on_paddle_collision(paddle, py)
-    local mover = self:get_component(Mover)
-    local circle = self:get_component(Circle)
+function Ball:_check_paddle_collision(p)
+    -- FIX: Definite tunneling issues at high speeds
 
-    local _prev_vy = mover.vy
+    local paddle_y_at_ball = (p.m * self.x) + p.c
 
-    -- Correct position
-    self.y = py - circle.radius
+	if self.bottom >= paddle_y_at_ball and
+		self.top <= p.lowest_y + abs(self.vy) + 2 and
+		self.x >= p.x1 and
+		self.x <= p.x2 then
+		return paddle_y_at_ball
+	end
 
-    -- Invert y velocity with bounce factor
-    mover.vy = _prev_vy * -paddle.bounce * 0.9 -- Tuning factor
-    mover.vx += paddle.m * _prev_vy * 0.5 -- Tuning factor
-    
-    
-    --[[
-    -- Calculate velocity at the balls x position on the platform
-    local t = (self.x - platform.x1) / (platform.x2 - platform.x1)
-    local platform_vy_at_ball = platform.vy1 + t * (platform.vy2 - platform.vy1)
-
-    -- Correct Position
-    self.y = platform_y_at_ball - self.r
-
-    -- simple collision response: invert y velocity
-    self.vy = _prev_vy * -platform.bounce + platform_vy_at_ball * 0.5 --Tuning factor
-
-    self.vx += platform.m * _prev_vy * 0.5 -- Tuning factor
-    ]]--
+	return false
 end
 
+function Ball:_on_paddle_collision(p, py, prev_vy)
+    -- Calculate velocity at the balls x position on the platform
+    local t = (self.x - p.x1) / (p.x2 - p.x1)
+    local p_vy_at_ball = p.vy1 + t * (p.vy2 - p.vy1)
+
+    -- Correct Position
+    self.y = py - self.r
+
+    -- simple collision response: invert y velocity
+    self.vy = prev_vy * -p.bounce + p_vy_at_ball * 0.5 --Tuning factor
+
+    self.vx += p.m * prev_vy * 0.5 -- Tuning factor
+end
 
 function Ball:_update_bounds()
     self.bottom = self.y + self.r
