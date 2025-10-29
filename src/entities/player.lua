@@ -22,7 +22,6 @@ function Player.new(opts)
     self.vx = 0
     self.vy = 0
 
-    self.max_v = opts.max_v or 3
     self.acceleration = opts.acceleration or 0.5
     self.friction = opts.friction or 0.8
     
@@ -49,17 +48,7 @@ function Player:update()
     self.y += self.vy
 
     -- Apply friction
-    if self.vx >  0 then
-        self.vx = max(0, self.vx * self.friction)
-    elseif self.vx < 0 then
-        self.vx = min(0, self.vx * self.friction)
-    end
-
-    if self.vy >  0 then
-        self.vy = max(0, self.vy * self.friction)
-    elseif self.vy < 0 then
-        self.vy = min(0, self.vy * self.friction)
-    end
+    self:_apply_friction()
 
     -- Update line position/values
     self:_update_line()
@@ -92,6 +81,20 @@ function Player:_update_line()
 	self.c = get_y_intercept(self.m, self.x1, self.y1)
 end
 
+function Player:_apply_friction()
+    if self.vx >  0 then
+        self.vx = max(0, self.vx * self.friction)
+    elseif self.vx < 0 then
+        self.vx = min(0, self.vx * self.friction)
+    end
+
+    if self.vy >  0 then
+        self.vy = max(0, self.vy * self.friction)
+    elseif self.vy < 0 then
+        self.vy = min(0, self.vy * self.friction)
+    end
+end
+
 function Player:_controller_inputs()
     local idx = self.idx
     local up = btn(2, idx)
@@ -102,22 +105,10 @@ function Player:_controller_inputs()
     local x = btn(5, idx)
 
     -- Joystick movement
-    if left then 
-        self.vx -= self.acceleration
-        self.vx = max(self.vx, -self.max_v)
-    end
-    if right then 
-        self.vx += self.acceleration
-        self.vx = min(self.vx, self.max_v)
-    end
-    if up then 
-        self.vy -= self.acceleration 
-        self.vy = max(self.vy, -self.max_v)
-    end
-    if down then 
-        self.vy += self.acceleration 
-        self.vy = min(self.vy, self.max_v)
-    end
+    if left then self.vx -= self.acceleration end
+    if right then self.vx += self.acceleration end
+    if up then self.vy -= self.acceleration end
+    if down then self.vy += self.acceleration end
 
     -- Buttons for tilting the paddle
      if o and not x then
