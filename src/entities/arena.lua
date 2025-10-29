@@ -6,27 +6,20 @@ Arena.__index = Arena
 
 setmetatable(Arena, {__index = Entity})
 
--- Tuning Constants
-Arena.X = 0
-Arena.Y = 0
-Arena.WIDTH = 128
-Arena.HEIGHT = 128
-Arena.WALL_THICKNESS = 2
-Arena.COLOR = 7
 
 function Arena.new(opts) 
     -- Base entity
     local self = Entity.new({
-        x = opts.x or Arena.X,
-        y = opts.y or Arena.Y,
-        w = opts.width or Arena.WIDTH,
-        h = opts.height or Arena.HEIGHT
+        x = opts.x or 0,
+        y = opts.y or 0
     })
 
     setmetatable(self, Arena)
-    
-    self.wall_thickness = opts.wall_thickness or Arena.WALL_THICKNESS
-    self.color = opts.color or Arena.COLOR
+
+    self.w = opts.width or 128
+    self.h = opts.height or 128
+    self.wall_thickness = opts.wall_thickness or 2
+    self.color = opts.color or 7
 
     return self
 end

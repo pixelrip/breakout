@@ -5,6 +5,8 @@ world = {
 }
 
 function world:add(e, type)
+    local type = type or false
+    
     add(self.entities, e)
 
     -- Add to specific lists

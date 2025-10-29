@@ -20,7 +20,7 @@ function Ball.new(opts)
     self.r = opts.r or 2
     
     self.color = opts.color or 7
-    self.gravity = opts.gravity or 0.2
+    self.gravity = opts.gravity or 0.1
     
     self:_update_bounds()
 
@@ -54,6 +54,8 @@ function Ball:draw()
     circfill(self.x, self.y, self.r, self.color)
     pset(self.x, self.y, 8)
 end
+
+-- "Private" Methods
 
 function Ball:_check_paddle_collision(p)
     -- FIX: Definite tunneling issues at high speeds

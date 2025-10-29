@@ -10,7 +10,7 @@ __lua__
 
 -- Entities
 #include src/entities/base/base.lua
---#include src/entities/arena.lua
+#include src/entities/arena.lua
 #include src/entities/ball.lua
 #include src/entities/player.lua
 
