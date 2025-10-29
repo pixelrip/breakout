@@ -102,7 +102,6 @@ function Ball:_update_bounds()
 end
 
 function Ball:_check_wall_collision(bounds)
-    -- Left Wall
     if self.left <= bounds.right and
         self.right >= bounds.left and
         self.bottom >= bounds.top and
