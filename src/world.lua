@@ -1,7 +1,8 @@
 world = {
     entities = {},
     players = {},
-    balls = {}
+    balls = {},
+    walls = {},
 }
 
 function world:add(e, type)
@@ -14,6 +15,8 @@ function world:add(e, type)
         add(self.players, e)
     elseif type == "ball" then
         add(self.balls, e)
+    elseif type == "wall" then
+        add(self.walls, e)
     end
 end
 

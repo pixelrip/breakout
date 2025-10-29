@@ -48,7 +48,15 @@ function Ball:update()
             self:_on_paddle_collision(p, py)
         end
     end
+
+    -- Check wall collisions
+    for w in all(world.walls) do
+        if self:_check_wall_collision(w.bounds) then
+            self:_on_wall_collision(w)
+        end
+    end
 end
+
 
 function Ball:draw()
     circfill(self.x, self.y, self.r, self.color)
@@ -91,4 +99,38 @@ function Ball:_update_bounds()
     self.top = self.y - self.r
     self.left = self.x - self.r
     self.right = self.x + self.r
+end
+
+function Ball:_check_wall_collision(bounds)
+    -- Left Wall
+    if self.left <= bounds.right and
+        self.right >= bounds.left and
+        self.bottom >= bounds.top and
+        self.top <= bounds.bottom then
+        return true
+    end
+
+    return false
+end
+
+function Ball:_on_wall_collision(w)
+    
+    -- Simple collision response: invert velocity based on side hit
+    if self.prev_vy > 0 and self.top < w.bounds.top then
+        -- Hit from top
+        self.y = w.bounds.top - self.r
+        self.vy = self.prev_vy * -w.bounce
+    elseif self.prev_vy < 0 and self.bottom > w.bounds.bottom then
+        -- Hit from bottom
+        self.y = w.bounds.bottom + self.r
+        self.vy = self.prev_vy * -w.bounce
+    elseif self.vx > 0 and self.left < w.bounds.left then
+        -- Hit from left
+        self.x = w.bounds.left - self.r
+        self.vx = self.vx * -w.bounce
+    elseif self.vx < 0 and self.right > w.bounds.right then
+        -- Hit from right
+        self.x = w.bounds.right + self.r
+        self.vx = self.vx * -w.bounce
+    end
 end
