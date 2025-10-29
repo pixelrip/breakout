@@ -62,6 +62,9 @@ end
 function Player:draw()
     line(self.x1, self.y1, self.x2, self.y2, self.color)
     pset(self.x, self.y, 8)
+
+    print(self.vy1, 10 * (self.idx + 1), 2, 7)
+    print(self.vy2, 10 * (self.idx + 1), 8, 7)
 end
 
 
@@ -96,13 +99,12 @@ function Player:_apply_friction()
 end
 
 function Player:_controller_inputs()
-    local idx = self.idx
-    local up = btn(2, idx)
-    local down = btn(3, idx)
-    local left = btn(0, idx)
-    local right = btn(1, idx)
-    local o = btn(4, idx)
-    local x = btn(5, idx)
+    local up = input:onhold(2, self)
+    local down = input:onhold(3, self)
+    local left = input:onhold(0, self)
+    local right = input:onhold(1, self)
+    local o = input:onhold(4, self)
+    local x = input:onhold(5, self)
 
     -- Joystick movement
     if left then self.vx -= self.acceleration end

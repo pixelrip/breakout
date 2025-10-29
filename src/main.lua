@@ -45,9 +45,13 @@ function _init()
     world:add(p1, "player")
     world:add(p2, "player")
     world:add(ball, "ball")
+
+    -- Input manager
+    input:init()
 end
 
 function _update()
+    input:update()
     world:update()
 end
 

@@ -8,6 +8,9 @@ __lua__
 #include src/utilities.lua
 #include src/world.lua
 
+-- Input manager
+#include src/input.lua
+
 -- Entities
 #include src/entities/base/base.lua
 #include src/entities/wall.lua
