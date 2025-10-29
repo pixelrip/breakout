@@ -30,3 +30,16 @@ end
 function rnd_between(min, max)
     return flr(rnd(max - min + 1) + min)
 end
+
+function circle_line_collision(circle, line)
+    local line_y_at_circle = (line.m * circle.owner.x) + line.c
+
+    if circle.bottom >= line_y_at_circle and
+		circle.top <= line.lowest_y and
+		circle.left >= line.x1 and
+		circle.right <= line.x2 then
+		return line_y_at_circle
+	end
+
+    return false
+end

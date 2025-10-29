@@ -8,19 +8,6 @@ __lua__
 #include src/utilities.lua
 #include src/world.lua
 
--- Components
---#include src/components/rotation.lua
---#include src/components/rectangle.lua
---#include src/components/input_mover.lua
---#include src/components/input_rotater.lua
---#include src/components/circle_collider.lua
---#include src/components/rotation_rectangle_collider.lua
-#include src/components/circle.lua
-#include src/components/mover.lua
-#include src/components/gravity.lua
-#include src/components/paddle.lua
-#include src/components/paddle_input.lua
-
 -- Entities
 #include src/entities/base/base.lua
 --#include src/entities/arena.lua

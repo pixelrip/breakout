@@ -30,22 +30,16 @@ function _init()
     })
 
     --world:add(arena)
-    world:add(p1)
-    world:add(p2)
-    world:add(ball)
+    world:add(p1, "player")
+    world:add(p2, "player")
+    world:add(ball, "ball")
 end
 
 function _update()
-    for e in all(world.entities) do
-        e:update()
-    end
+    world:update()
 end
 
 function _draw()
     cls(2)
-    
-    for e in all(world.entities) do
-        e:draw()
-    end
-
+    world:draw()
 end
