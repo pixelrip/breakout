@@ -12,20 +12,26 @@ function _init()
     })
     ]]--
 
-    player = Player.new({
-        x = 64,
-        y = 120
+    p1 = Player.new({
+        x = 28,
+        y = 120,
+        idx = 0
+    })
+
+    p2 = Player.new({
+        x = 93,
+        y = 120,
+        idx = 1
     })
 
     ball = Ball.new({
         x = 64,
-        y = 60,
-        vx = 0,
-        vy = 0
+        y = 20
     })
 
     --world:add(arena)
-    world:add(player)
+    world:add(p1)
+    world:add(p2)
     world:add(ball)
 end
 

@@ -19,6 +19,7 @@ __lua__
 #include src/components/mover.lua
 #include src/components/gravity.lua
 #include src/components/paddle.lua
+#include src/components/paddle_input.lua
 
 -- Entities
 #include src/entities/base/base.lua

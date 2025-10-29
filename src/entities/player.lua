@@ -15,11 +15,21 @@ function Player.new(opts)
     })
 
     setmetatable(self, Player)
-        
+    
+    -- Player properties (Player 1=0, Player 2=1)
+    self.idx = opts.idx or 0
+
     -- compose behavior with components
+    self:add_component(Mover.new(self, {
+        max_speed = 2,
+        friction = 0.2
+    }))
     self:add_component(Paddle.new(self, {
         col = 7,
         bounce = 0.8
+    }))
+    self:add_component(PaddleInput.new(self, {
+        acceleration = 0.5
     }))
 
     return self
