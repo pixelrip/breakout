@@ -29,7 +29,7 @@ end
 
 
 function Ball:update()
-    local prev_vy = self.vy
+    self.prev_vy = self.vy
 
     -- apply gravity
     self.vy += self.gravity
@@ -45,7 +45,7 @@ function Ball:update()
     for p in all(world.players) do
         local py = self:_check_paddle_collision(p)
         if py then
-            self:_on_paddle_collision(p, py, prev_vy)
+            self:_on_paddle_collision(p, py)
         end
     end
 end
@@ -70,7 +70,7 @@ function Ball:_check_paddle_collision(p)
 	return false
 end
 
-function Ball:_on_paddle_collision(p, py, prev_vy)
+function Ball:_on_paddle_collision(p, py)
     -- Calculate velocity at the balls x position on the platform
     local t = (self.x - p.x1) / (p.x2 - p.x1)
     local p_vy_at_ball = p.vy1 + t * (p.vy2 - p.vy1)
@@ -79,9 +79,9 @@ function Ball:_on_paddle_collision(p, py, prev_vy)
     self.y = py - self.r
 
     -- simple collision response: invert y velocity
-    self.vy = prev_vy * -p.bounce + p_vy_at_ball * 0.5 --Tuning factor
+    self.vy = self.prev_vy * -p.bounce + p_vy_at_ball * 0.5 --Tuning factor
 
-    self.vx += p.m * prev_vy * 0.5 -- Tuning factor
+    self.vx += p.m * self.prev_vy * 0.5 -- Tuning factor
 end
 
 function Ball:_update_bounds()
