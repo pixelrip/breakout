@@ -1,5 +1,5 @@
 # Dev Log
-Total Time: 00
+Total Time: 14hrs
 
 ## TODO:
 
@@ -12,7 +12,19 @@ Total Time: 00
 
 ## Daily Notes
 
+### Day 4: 2025-10-30
+- Time Worked:
+- 
+
+### Day 3: 2025-10-29
+- Time Worked: 6hrs
+- Refactor player/paddle
+- Refactor entity tracking in world
+- Refactor ball/paddle collisions
+- Paddle/ball physics starting to feel pretty solid; definitely still some collision/tunneling issues though
+
 ### Day 2: 2025-10-27
+- Time Worked: 4hrs
 - Took a step back and got a better understanding of the actual physics I need. Put together a proof of concept here: https://github.com/pixelrip/ball-platform-physics
 - WIP: Refactoring this code entirely
 
