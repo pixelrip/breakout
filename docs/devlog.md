@@ -14,6 +14,7 @@ Total Time: 14hrs
 
 ### Day 4: 2025-10-30
 - Time Worked:
+- Todays question: Fix borderline unshippable collision bugs or add the bricks? I may regret the choice, but given I'm likely only going to introduce more collisions (bottom of paddle, bricks, pickups) I'm going to devote today to a collision poc.
 - 
 
 ### Day 3: 2025-10-29
