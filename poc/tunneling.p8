@@ -67,11 +67,13 @@ end
 ball = {}
 
 function ball:init()
+ -- position
 	self.x = 64
 	self.y = 0
 		
+	-- size+color
 	self.r = 2 -- radius
-	self.col = 7 -- color
+	self.col = 7
 	
 	-- bounds (update_bounds())
 	self.top = 0
@@ -82,17 +84,17 @@ function ball:init()
 	-- velocity
 	self.vx = 0
 	self.vy = 0
-	self.prev_vx = 0
-	self.prev_vy = 0
 		
-		-- speed
-	self.sp = 1
+	-- speed
+	self.sp = 0.2
+	
+	-- previous frame data
+	self.pr = {}
 end
 	
 function ball:update()
-	-- store vel from prev frame
-	self.prev_vx = self.vx
-	self.prev_vy = self.vy
+	-- data from prev frame
+	self:update_prev_frame_data()
 
  -- increase speed
 	self.vy += self.sp
@@ -120,6 +122,21 @@ function ball:update_bounds()
 end
 
 
+function ball:update_prev_frame_data()
+	local pr = self.pr
+	pr.x = self.x
+	pr.y = self.y
+	pr.vx = self.vx
+	pr.vy = self.vy
+	pr.top = self.top
+	pr.bottom = self.bottom
+	pr.left = self.left
+	pr.right = self.right
+	pr.m = self.m
+	pr.c = self.c
+end
+
+
 function ball:on_edge_collision(l)
  local ey = get_line_y_at_ball(self,l) 
  
@@ -130,7 +147,7 @@ function ball:on_edge_collision(l)
  self.vy = -self.vy
  
  -- "nudge" it based on slope
- self.vx += l.m * self.prev_vy
+ self.vx += l.m * self.pr.vy
  
 end
 -->8
