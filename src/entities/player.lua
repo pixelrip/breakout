@@ -6,6 +6,8 @@ Player.__index = Player
 
 setmetatable(Player, {__index = Entity})
 
+Player.DEBUG = true
+
 function Player.new(opts) 
     -- Base entity
     local self = Entity.new({
@@ -27,11 +29,19 @@ function Player.new(opts)
     
     self.tilt_y1 = 0
     self.tilt_y2 = 0
+
+    self.prox_y1 = 0
+    self.prox_y2 = 0
     
     self:_update_line()
 
     self.color = opts.color or 7
-    self.bounce = opts.bounce or 0.8
+    self.bounce = opts.bounce or 0.2
+
+    -- DEBUG
+    self.debug_pop = 0
+    self.debug_vop = 0
+    self.debug_prox = 0
 
     return self
 end
@@ -57,14 +67,32 @@ function Player:update()
     self.vy1 = self.y1 - prev_y1
     self.vy2 = self.y2 - prev_y2
 
+    -- Reduce shot timing
+    self.prox_y1 = max(0, self.prox_y1 - 1)
+    self.prox_y2 = max(0, self.prox_y2 - 1)
 end
 
 function Player:draw()
     line(self.x1, self.y1, self.x2, self.y2, self.color)
     pset(self.x, self.y, 8)
 
-    print(self.vy1, 10 * (self.idx + 1), 2, 7)
-    print(self.vy2, 10 * (self.idx + 1), 8, 7)
+    -- DEBUG
+    if self.DEBUG then
+        print("x: ", 3, 3, 7)
+        print(self.x, 40 * (self.idx + 1), 3, 7)
+        print("y: ", 3, 9, 7)
+        print(self.y, 40 * (self.idx + 1), 9, 7)
+        print("prox_y1: ", 3, 15, 7)
+        print(self.prox_y1, 40 * (self.idx + 1), 15, 7)
+        print("prox_y2: ", 3, 21, 7)
+        print(self.prox_y2, 40 * (self.idx + 1), 21, 7)
+        print("pop: ", 3, 27, 7)
+        print(self.debug_pop, 40 * (self.idx + 1), 27, 7)
+        print("vop: ", 3, 33, 7)
+        print(self.debug_vop, 40 * (self.idx + 1), 33, 7)
+        print("prox: ", 3, 39, 7)
+        print(self.debug_prox, 40 * (self.idx + 1), 39, 7)
+    end
 end
 
 
@@ -103,8 +131,10 @@ function Player:_controller_inputs()
     local down = input:onhold(3, self)
     local left = input:onhold(0, self)
     local right = input:onhold(1, self)
-    local o = input:onhold(4, self)
-    local x = input:onhold(5, self)
+    local o_held = input:onhold(4, self)
+    local x_held = input:onhold(5, self)
+    local o_onpress = input:onpress(4, self)
+    local x_onpress = input:onpress(5, self)
 
     -- Joystick movement
     if left then self.vx -= self.acceleration end
@@ -112,15 +142,44 @@ function Player:_controller_inputs()
     if up then self.vy -= self.acceleration end
     if down then self.vy += self.acceleration end
 
+    if o_onpress and not x_held then
+        self.prox_y1 = 5
+    elseif x_onpress and not o_held then
+        self.prox_y2 = 5
+    end
+
     -- Buttons for tilting the paddle
-     if o and not x then
-        self.tilt_y1 = 6
-        self.tilt_y2 = -6
-    elseif x and not o then
-        self.tilt_y1 = -6
-        self.tilt_y2 = 6
+     if o_held and not x then
+        self.tilt_y1 = max(self.tilt_y1 - 3, -6)
+        self.tilt_y2 = min(self.tilt_y2 + 3, 6)
+    elseif x_held and not o_held then
+        self.tilt_y1 = min(self.tilt_y1 + 3, 6)
+        self.tilt_y2 = max(self.tilt_y2 - 3, -6)
     else
         self.tilt_y1 = 0
-        self.tilt_y2 = 0  
+        self.tilt_y2 = 0
    end
+end
+
+function Player:get_boosh(b)
+    -- "Boosh" is a factor of how hard the
+    -- player hits the ball based on where
+    -- the ball collided with the paddle as 
+    -- well as their timing (prox) with the "swing"
+
+
+    -- Position on paddle (0 -> 1)
+    local pop = (b.x - self.x1) / (self.x2 - self.x1)
+    self.debug_pop = pop
+
+    -- Velocity at that `pop`
+    local vop = self.vy1 + pop * (self.vy2 - self.vy1)
+    self.debug_vop = vop
+
+    -- Timing the "swing"
+    local prox = pop < 0.5 and self.prox_y1 or self.prox_y2
+    self.debug_prox = prox
+
+    -- boosh = velocity at point minus timing factor plus some of player's velocity
+    return vop - (prox * 0.5) + (self.vy * 0.5)
 end

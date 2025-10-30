@@ -55,6 +55,14 @@ function Ball:update()
             self:_on_wall_collision(w)
         end
     end
+
+    -- DEBUG: Return ball if off screen
+    if self.y  > 200 then
+        self.y = 20
+        self.x = 64
+        self.vy = 0
+        self.vx = 0
+    end
 end
 
 
@@ -81,16 +89,14 @@ function Ball:_check_paddle_collision(p)
 end
 
 function Ball:_on_paddle_collision(p, py)
-    -- Calculate velocity at the balls x position on the platform
-    local t = (self.x - p.x1) / (p.x2 - p.x1)
-    local p_vy_at_ball = p.vy1 + t * (p.vy2 - p.vy1)
+
+    local boosh = p:get_boosh(self)
 
     -- Correct Position
     self.y = py - self.r
 
     -- simple collision response: invert y velocity
-    self.vy = self.prev_vy * -p.bounce + p_vy_at_ball * 0.5 --Tuning factor
-
+    self.vy = self.prev_vy * -p.bounce + boosh * 1 --Tuning factor
     self.vx += p.m * self.prev_vy * 0.5 -- Tuning factor
 end
 
@@ -113,7 +119,6 @@ function Ball:_check_wall_collision(bounds)
 end
 
 function Ball:_on_wall_collision(w)
-    
     -- Simple collision response: invert velocity based on side hit
     if self.prev_vy > 0 and self.top < w.bounds.top then
         -- Hit from top
