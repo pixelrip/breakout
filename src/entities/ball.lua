@@ -46,11 +46,9 @@ function Ball:update()
     self:_update_bounds()
 
     -- Check paddle collision
-    for p in all(world.players) do
-        local hit, hit_pos = circle_vs_line(self, p)
-        if hit then
-            self:_on_player_collision(p, hit_pos)
-        end
+    local paddle, hit_pos = self:_check_paddle_collisions()
+    if paddle then
+        self:_on_player_collision(paddle, hit_pos)
     end
 
     -- Check wall collision
@@ -111,6 +109,16 @@ function Ball:_store_previous_frame_data()
             right = self.bounds.right
         }
     }
+end
+
+function Ball:_check_paddle_collisions()
+    for p in all(world.players) do
+        local hit, hit_pos = circle_vs_line(self, p)
+        if hit then
+            return p, hit_pos
+        end
+    end
+    return nil, nil
 end
 
 function Ball:_check_wall_collisions()
