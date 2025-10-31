@@ -51,8 +51,8 @@ end
 
 -- Swept AABB collision detection
 -- a = moving object (must have prev.bounds)
--- b = static or moving object
--- Returns: hit (boolean), collision info {normal_x, normal_y, t}
+-- b = static or moving object (prev.bounds optional)
+-- Returns: hit (boolean), collision info {normal_x, normal_y, t, b_is_moving}
 function box_vs_box(a, b)
     -- If no previous frame data, fall back to static check
     if not a.prev or not a.prev.bounds then
@@ -66,34 +66,43 @@ function box_vs_box(a, b)
 
     local prev_ab = a.prev.bounds
     local curr_ab = a.bounds
-    local bb = b.bounds
+    local prev_bb = b.prev and b.prev.bounds or b.bounds
+    local curr_bb = b.bounds
 
-    -- Calculate velocity (change in position)
-    local dx = (curr_ab.left - prev_ab.left)
-    local dy = (curr_ab.top - prev_ab.top)
+    -- Calculate relative velocity (a relative to b)
+    local dx_a = (curr_ab.left - prev_ab.left)
+    local dy_a = (curr_ab.top - prev_ab.top)
+    local dx_b = (curr_bb.left - prev_bb.left)
+    local dy_b = (curr_bb.top - prev_bb.top)
 
-    -- Early exit if no movement
+    -- Relative velocity
+    local dx = dx_a - dx_b
+    local dy = dy_a - dy_b
+    local b_is_moving = (dx_b ~= 0 or dy_b ~= 0)
+
+    -- Early exit if no relative movement
     if dx == 0 and dy == 0 then
         -- Static overlap check
-        return not (curr_ab.right < bb.left or
-                    curr_ab.left > bb.right or
-                    curr_ab.bottom < bb.top or
-                    curr_ab.top > bb.bottom)
+        return not (curr_ab.right < curr_bb.left or
+                    curr_ab.left > curr_bb.right or
+                    curr_ab.bottom < curr_bb.top or
+                    curr_ab.top > curr_bb.bottom)
     end
 
     -- Calculate time of collision for each axis
+    -- Use previous frame bounds for swept collision
     local entry_x, exit_x, entry_y, exit_y
 
     -- X-axis
     if dx > 0 then
-        entry_x = (bb.left - prev_ab.right) / dx
-        exit_x = (bb.right - prev_ab.left) / dx
+        entry_x = (prev_bb.left - prev_ab.right) / dx
+        exit_x = (prev_bb.right - prev_ab.left) / dx
     elseif dx < 0 then
-        entry_x = (bb.right - prev_ab.left) / dx
-        exit_x = (bb.left - prev_ab.right) / dx
+        entry_x = (prev_bb.right - prev_ab.left) / dx
+        exit_x = (prev_bb.left - prev_ab.right) / dx
     else
         -- No horizontal movement
-        if prev_ab.right < bb.left or prev_ab.left > bb.right then
+        if prev_ab.right < prev_bb.left or prev_ab.left > prev_bb.right then
             return false  -- No overlap on x-axis
         end
         entry_x = -999999
@@ -102,14 +111,14 @@ function box_vs_box(a, b)
 
     -- Y-axis
     if dy > 0 then
-        entry_y = (bb.top - prev_ab.bottom) / dy
-        exit_y = (bb.bottom - prev_ab.top) / dy
+        entry_y = (prev_bb.top - prev_ab.bottom) / dy
+        exit_y = (prev_bb.bottom - prev_ab.top) / dy
     elseif dy < 0 then
-        entry_y = (bb.bottom - prev_ab.top) / dy
-        exit_y = (bb.top - prev_ab.bottom) / dy
+        entry_y = (prev_bb.bottom - prev_ab.top) / dy
+        exit_y = (prev_bb.top - prev_ab.bottom) / dy
     else
         -- No vertical movement
-        if prev_ab.bottom < bb.top or prev_ab.top > bb.bottom then
+        if prev_ab.bottom < prev_bb.top or prev_ab.top > prev_bb.bottom then
             return false  -- No overlap on y-axis
         end
         entry_y = -999999
@@ -150,6 +159,9 @@ function box_vs_box(a, b)
     return true, {
         normal_x = normal_x,
         normal_y = normal_y,
-        t = max(0, entry_time)  -- Clamp to [0, 1]
+        t = max(0, entry_time),  -- Clamp to [0, 1]
+        b_is_moving = b_is_moving,
+        b_vx = dx_b,
+        b_vy = dy_b
     }
 end

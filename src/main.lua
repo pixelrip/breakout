@@ -27,6 +27,16 @@ function _init()
         color = 10
     }), "wall")
     
+
+    world:add(Wall.new({
+      x = 0,
+      y = 60,
+      width = 28,
+      height = 2,
+      color = 12,
+      vx = 0.5  -- Moves right at 0.5 pixels/frame
+  }), "wall")
+
     p1 = Player.new({
         x = 28,
         y = 120,

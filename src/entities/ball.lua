@@ -164,12 +164,15 @@ function Ball:_on_wall_collision(w, collision_info)
     end
 
     -- Swept collision response using normals
-    local wall_bounds = w.bounds
     local t = collision_info.t
 
-    -- Get velocity at collision
+    -- Get ball velocity this frame
     local vel_x = self.x - self.prev.x
     local vel_y = self.y - self.prev.y
+
+    -- Get wall velocity (if moving)
+    local wall_vx = collision_info.b_vx or 0
+    local wall_vy = collision_info.b_vy or 0
 
     -- Move to collision point
     self.x = self.prev.x + vel_x * t
@@ -177,13 +180,17 @@ function Ball:_on_wall_collision(w, collision_info)
 
     -- Apply bounce based on collision normal
     if collision_info.normal_x ~= 0 then
-        self.vx = self.vx * -w.bounce
-        vel_x = vel_x * -w.bounce
+        -- Bounce relative velocity and add wall velocity
+        local relative_vx = self.vx - wall_vx
+        self.vx = relative_vx * -w.bounce + wall_vx
+        vel_x = vel_x * -w.bounce + wall_vx
     end
 
     if collision_info.normal_y ~= 0 then
-        self.vy = self.vy * -w.bounce
-        vel_y = vel_y * -w.bounce
+        -- Bounce relative velocity and add wall velocity
+        local relative_vy = self.vy - wall_vy
+        self.vy = relative_vy * -w.bounce + wall_vy
+        vel_y = vel_y * -w.bounce + wall_vy
     end
 
     -- Apply remaining motion for (1-t) of the frame
