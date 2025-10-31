@@ -1,5 +1,5 @@
 # Dev Log
-Total Time: 18hrs
+Total Time: 23hrs
 
 ## TODO:
 
@@ -12,11 +12,21 @@ Total Time: 18hrs
 
 ## Daily Notes
 
+### Day 5: 2025-10-31
+- Time Worked: 5hrs
+- Continuing work on collision POC
+- POC works super well with any ball velocity (great!) but I'm inevitably going to run into problems with my moving paddles (shit!). Going to push ahead on the main game at this point though. 
+- Hit a wall with my own math understanding but leaned on claude to get things to a working point. Not happy about that but in the name of progress it had to be done.
+- Paddle and ball working well and the speed it pretty incredible and the wall / platform ideas are pretty extensible.
+- I may have used half my time, but the "pinball feel" I've been going for is pretty spot on, so I'm happy. 
+- Next week: Bricks!
+
+
 ### Day 4: 2025-10-30
 - Time Worked: 4hrs
 - Todays question: Fix borderline unshippable collision bugs or add the bricks? I may regret the choice, but given I'm likely only going to introduce more collisions (bottom of paddle, bricks, pickups) I'm going to devote today to a collision poc.
-- Began putting together proof-of-concept for "continuous collision detection" (ccd)
-- WIP POC; CCD almost working; still want tit to bounce off bt bottom/sides of the paddle as well.
+- Began putting together proof-of-concept for "continuous collision detection" in poc/ccd.p8
+- WIP on POC; CCD almost working; still want tit to bounce off bt bottom/sides of the paddle as well.
 
 
 ### Day 3: 2025-10-29
