@@ -53,23 +53,10 @@ function Ball:update()
         end
     end
 
-    -- Check wall collisions - find earliest collision
-    local earliest_collision = nil
-    local earliest_wall = nil
-    local earliest_t = 999
-
-    for w in all(world.walls) do
-        local hit, collision_info = box_vs_box(self, w)
-        if hit and collision_info and collision_info.t < earliest_t then
-            earliest_t = collision_info.t
-            earliest_collision = collision_info
-            earliest_wall = w
-        end
-    end
-
-    -- Handle only the first collision
-    if earliest_collision then
-        self:_on_wall_collision(earliest_wall, earliest_collision)
+    -- Check wall collision
+    local wall, collision_info = self:_check_wall_collisions()
+    if wall then
+        self:_on_wall_collision(wall, collision_info)
     end
 
 
@@ -126,18 +113,23 @@ function Ball:_store_previous_frame_data()
     }
 end
 
---[[
-function Ball:_check_wall_collision(bounds)
-    if self.left <= bounds.right and
-        self.right >= bounds.left and
-        self.bottom >= bounds.top and
-        self.top <= bounds.bottom then
-        return true
+function Ball:_check_wall_collisions()
+    local earliest_collision = nil
+    local earliest_wall = nil
+    local earliest_t = 999
+
+    for w in all(world.walls) do
+        local hit, collision_info = box_vs_box(self, w)
+        if hit and collision_info and collision_info.t < earliest_t then
+            earliest_t = collision_info.t
+            earliest_collision = collision_info
+            earliest_wall = w
+        end
     end
 
-    return false
+    return earliest_wall, earliest_collision
 end
-]]--
+
 
 function Ball:_on_wall_collision(w, collision_info)
     -- Handle collision based on collision normal
