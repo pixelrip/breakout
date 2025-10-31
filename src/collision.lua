@@ -9,10 +9,10 @@ function circle_vs_line(c, l)
     local c_ly = get_line_y_at_ball(c, l)
 
     -- Check for standard crossing collision
-    if prev_c.bottom <= p_ly and c.bottom >= c_ly then
+    if prev_c.bounds.bottom <= p_ly and c.bounds.bottom >= c_ly then
 
         -- find intersection point with lerp
-        local t = (c_ly - prev_c.bottom) / (c.bottom - prev_c.bottom)
+        local t = (c_ly - prev_c.bounds.bottom) / (c.bounds.bottom - prev_c.bounds.bottom)
 
         -- get exact collision point
         local hit_x = prev_c.x + (c.x - prev_c.x) * t
@@ -35,7 +35,7 @@ function circle_vs_line(c, l)
     -- Buffer zone check for slow-moving or resting balls
     -- Check if ball is very close to the paddle surface
     local buffer = 0.5  -- Small buffer distance
-    local dist_to_line = abs(c.bottom - c_ly)
+    local dist_to_line = abs(c.bounds.bottom - c_ly)
 
     if dist_to_line <= buffer and c.vy >= -0.1 then  -- Ball is close and not moving up fast
         -- Check if ball center is within paddle bounds
@@ -47,4 +47,15 @@ function circle_vs_line(c, l)
     ]]--
 
     return false
+end
+
+function box_vs_box(a,b)
+    local ab = a.bounds
+    local bb = b.bounds
+
+
+    return not (ab.right < bb.left or
+                ab.left > bb.right or
+                ab.bottom < bb.top or
+                ab.top > bb.bottom)
 end

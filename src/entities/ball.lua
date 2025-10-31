@@ -55,7 +55,7 @@ function Ball:update()
 
     -- Check wall collisions
     for w in all(world.walls) do
-        if self:_check_wall_collision(w.bounds) then
+        if box_vs_box(self, w) then
             self:_on_wall_collision(w)
         end
     end
@@ -91,10 +91,12 @@ function Ball:_on_player_collision(p, h)
 end
 
 function Ball:_update_bounds()
-    self.bottom = self.y + self.r
-    self.top = self.y - self.r
-    self.left = self.x - self.r
-    self.right = self.x + self.r
+    self.bounds = {
+        top = self.y - self.r,
+        bottom = self.y + self.r,
+        left = self.x - self.r,
+        right = self.x + self.r
+    }
 end
 
 function Ball:_store_previous_frame_data()
@@ -103,13 +105,16 @@ function Ball:_store_previous_frame_data()
         y = self.y,
         vx = self.vx,
         vy = self.vy,
-        top = self.top,
-        bottom = self.bottom,
-        left = self.left,
-        right = self.right
+        bounds = {
+            top = self.bounds.top,
+            bottom = self.bounds.bottom,
+            left = self.bounds.left,
+            right = self.bounds.right
+        }
     }
 end
 
+--[[
 function Ball:_check_wall_collision(bounds)
     if self.left <= bounds.right and
         self.right >= bounds.left and
@@ -120,24 +125,29 @@ function Ball:_check_wall_collision(bounds)
 
     return false
 end
+]]--
 
 function Ball:_on_wall_collision(w)
+    local prev = self.prev
+    local ball_bounds = self.bounds
+    local wall_bounds = w.bounds
+    
     -- Simple collision response: invert velocity based on side hit
-    if self.prev.vy > 0 and self.top < w.bounds.top then
+    if self.prev.vy > 0 and ball_bounds.top < wall_bounds.top then
         -- Hit from top
-        self.y = w.bounds.top - self.r
+        self.y = wall_bounds.top - self.r
         self.vy = self.prev.vy * -w.bounce
-    elseif self.prev.vy < 0 and self.bottom > w.bounds.bottom then
+    elseif self.prev.vy < 0 and ball_bounds.bottom > wall_bounds.bottom then
         -- Hit from bottom
-        self.y = w.bounds.bottom + self.r
+        self.y = wall_bounds.bottom + self.r
         self.vy = self.prev.vy * -w.bounce
-    elseif self.vx > 0 and self.left < w.bounds.left then
+    elseif self.vx > 0 and ball_bounds.left < wall_bounds.left then
         -- Hit from left
-        self.x = w.bounds.left - self.r
+        self.x = wall_bounds.left - self.r
         self.vx = self.vx * -w.bounce
-    elseif self.vx < 0 and self.right > w.bounds.right then
+    elseif self.vx < 0 and ball_bounds.right > wall_bounds.right then
         -- Hit from right
-        self.x = w.bounds.right + self.r
+        self.x = wall_bounds.right + self.r
         self.vx = self.vx * -w.bounce
     end
 end
