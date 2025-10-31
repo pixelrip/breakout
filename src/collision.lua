@@ -28,6 +28,10 @@ function circle_vs_line(c, l)
         end
     end
 
+    --[[
+    -- I'm not using this for now, because the player should not be
+    -- able to hold the ball on the paddle indefinitely
+
     -- Buffer zone check for slow-moving or resting balls
     -- Check if ball is very close to the paddle surface
     local buffer = 0.5  -- Small buffer distance
@@ -40,6 +44,7 @@ function circle_vs_line(c, l)
             return true, {x = c.x, y = c_ly - c.r, t = 1}
         end
     end
+    ]]--
 
     return false
 end
