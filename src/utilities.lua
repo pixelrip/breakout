@@ -6,40 +6,29 @@ function log(txt)
 end
 
 
-function get_slope(x1, y1, x2, y2)
-    local dx = x2 - x1
-    local dy = y2 - y1
-    
-    if dx == 0 then
-        return nil
-    end
+function get_slope(l)
+    local dx = l.x2 - l.x1
+    local dy = l.y2 - l.y1
+
+    if dx == 0 then return nil end
     
     return dy / dx
 end
 
-function get_y_intercept(m, x, y)
-    if m == nil then
-        return nil
-    end
+function get_y_intercept(l)
+    if l.m == nil then return nil end
     
     -- c = y - (m * x)
-    return y - (m * x)
+    return l.y1 - (l.m * l.x1)
 end
 
+function get_line_y_at_ball(b,l)
+	-- returns the y position of
+	-- the spot where the ball 
+	-- hits the line
+	return (l.m * b.x) + l.c
+end
 
 function rnd_between(min, max)
     return flr(rnd(max - min + 1) + min)
-end
-
-function circle_line_collision(circle, line)
-    local line_y_at_circle = (line.m * circle.owner.x) + line.c
-
-    if circle.bottom >= line_y_at_circle and
-		circle.top <= line.lowest_y and
-		circle.left >= line.x1 and
-		circle.right <= line.x2 then
-		return line_y_at_circle
-	end
-
-    return false
 end

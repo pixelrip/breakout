@@ -9,7 +9,7 @@ function Ball.new(opts)
     -- Base entity
     local self = Entity.new({
         x = opts.x or 64,
-        y = opts.y or 60,
+        y = opts.y or 10,
     })
 
     setmetatable(self, Ball)
@@ -47,9 +47,9 @@ function Ball:update()
 
     -- Check paddle collision
     for p in all(world.players) do
-        local py = self:_check_paddle_collision(p)
-        if py then
-            self:_on_paddle_collision(p, py)
+        local hit, hit_pos = circle_vs_line(self, p)
+        if hit then
+            self:_on_player_collision(p, hit_pos)
         end
     end
 
@@ -59,6 +59,7 @@ function Ball:update()
             self:_on_wall_collision(w)
         end
     end
+
 
     -- DEBUG: Return ball if off screen
     if self.y  > 200 then
@@ -77,29 +78,14 @@ end
 
 -- "Private" Methods
 
-function Ball:_check_paddle_collision(p)
-    -- FIX: Definite tunneling issues at high speeds
-
-    local paddle_y_at_ball = (p.m * self.x) + p.c
-
-	if self.bottom >= paddle_y_at_ball and
-		self.top <= p.lowest_y + abs(self.vy) + 2 and
-		self.x >= p.x1 and
-		self.x <= p.x2 then
-		return paddle_y_at_ball
-	end
-
-	return false
-end
-
-function Ball:_on_paddle_collision(p, py)
+function Ball:_on_player_collision(p, h)
 
     local boosh = p:get_boosh(self)
 
     -- Correct Position
-    self.y = py - self.r
+    self.x = h.x
+    self.y = h.y
 
-    -- simple collision response: invert y velocity
     self.vy = self.prev.vy * -p.bounce + boosh * 1 --Tuning factor
     self.vx += p.m * self.prev.vy * 0.5 -- Tuning factor
 end

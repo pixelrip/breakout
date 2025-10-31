@@ -6,6 +6,7 @@ __lua__
 
 -- Helpers
 #include src/utilities.lua
+#include src/collision.lua
 #include src/world.lua
 
 -- Input manager

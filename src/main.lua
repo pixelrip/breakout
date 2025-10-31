@@ -1,6 +1,8 @@
 DEBUG = true
 
 function _init()
+    log("\n\n --------------------")
+        
     world:add(Wall.new({
         x = 0,
         y = 0,
@@ -51,6 +53,7 @@ function _init()
 end
 
 function _update()
+
     input:update()
     world:update()
 end

@@ -22,7 +22,7 @@ function Player.new(opts)
     self.w = opts.w or 24
     self.a = opts.a or 0
     self.color = opts.color or 7
-    self.bounce = opts.bounce or 0.2
+    self.bounce = opts.bounce or 0.8
 
     -- Movement Defaults
     self.vx = 0
@@ -134,9 +134,9 @@ function Player:_update_endpoints()
 end
 
 function Player:_update_math()
-    self.lowest_y = max(self.y1, self.y2)
-    self.m = get_slope(self.x1, self.y1, self.x2, self.y2)
-    self.c = get_y_intercept(self.m, self.x1, self.y1)
+    self.bottom = max(self.y1, self.y2)
+    self.m = get_slope(self)
+    self.c = get_y_intercept(self)
 end
 
 function Player:_apply_friction()
