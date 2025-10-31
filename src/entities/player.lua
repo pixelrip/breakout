@@ -20,29 +20,22 @@ function Player.new(opts)
     self.idx = opts.idx or 0
 
     self.w = opts.w or 24
-
-    self.vx = 0
-    self.vy = 0
-
-    self.acceleration = opts.acceleration or 0.5
-    self.friction = opts.friction or 0.8
-    
-    self.tilt_y1 = 0
-    self.tilt_y2 = 0
-
-    self.prox_y1 = 0
-    self.prox_y2 = 0
-    
-    self:_update_line()
-
+    self.a = opts.a or 0
     self.color = opts.color or 7
     self.bounce = opts.bounce or 0.2
 
-    -- DEBUG
-    self.debug_pop = 0
-    self.debug_vop = 0
-    self.debug_prox = 0
+    -- Movement Defaults
+    self.vx = 0
+    self.vy = 0
+    self.acceleration = opts.acceleration or 0.5
+    self.friction = opts.friction or 0.8
+    
+    -- Hate this name; its a timer for how close the player is to hitting the ball
+    self.prox_y1 = 0
+    self.prox_y2 = 0
 
+    self:_update_endpoints()
+    self:_update_math()
     return self
 end
 
@@ -61,7 +54,8 @@ function Player:update()
     self:_apply_friction()
 
     -- Update line position/values
-    self:_update_line()
+    self:_update_endpoints()
+    self:_update_math()
 
     -- Calculate velocity at line endpoints
     self.vy1 = self.y1 - prev_y1
@@ -77,6 +71,7 @@ function Player:draw()
     pset(self.x, self.y, 8)
 
     -- DEBUG
+    --[[
     if self.DEBUG then
         print("x: ", 3, 3, 7)
         print(self.x, 40 * (self.idx + 1), 3, 7)
@@ -93,23 +88,28 @@ function Player:draw()
         print("prox: ", 3, 39, 7)
         print(self.debug_prox, 40 * (self.idx + 1), 39, 7)
     end
+    ]]--
 end
 
 
 -- "Private" Methods
 
-function Player:_update_line()
+function Player:_update_endpoints()
     -- token saver for duplicate _init and _update code
     local hw = self.w / 2
+    local dx = cos(self.a) * hw
+    local dy = sin(self.a) * hw
 
-    self.x1 = self.x - hw
-    self.y1 = self.y + self.tilt_y1
-    self.x2 = self.x + hw
-    self.y2 = self.y + self.tilt_y2
+    self.x1 = self.x - dx
+    self.y1 = self.y - dy
+    self.x2 = self.x + dx
+    self.y2 = self.y + dy
+end
 
+function Player:_update_math()
     self.lowest_y = max(self.y1, self.y2)
-	self.m = get_slope(self.x1, self.y1, self.x2, self.y2)
-	self.c = get_y_intercept(self.m, self.x1, self.y1)
+    self.m = get_slope(self.x1, self.y1, self.x2, self.y2)
+    self.c = get_y_intercept(self.m, self.x1, self.y1)
 end
 
 function Player:_apply_friction()
@@ -150,14 +150,11 @@ function Player:_controller_inputs()
 
     -- Buttons for tilting the paddle
      if o_held and not x then
-        self.tilt_y1 = max(self.tilt_y1 - 3, -6)
-        self.tilt_y2 = min(self.tilt_y2 + 3, 6)
+        self.a = max(self.a - 0.05, -0.125)
     elseif x_held and not o_held then
-        self.tilt_y1 = min(self.tilt_y1 + 3, 6)
-        self.tilt_y2 = max(self.tilt_y2 - 3, -6)
+        self.a = min(self.a + 0.05, 0.125)
     else
-        self.tilt_y1 = 0
-        self.tilt_y2 = 0
+        self.a = 0
    end
 end
 
