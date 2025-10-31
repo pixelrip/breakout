@@ -24,12 +24,16 @@ function Ball.new(opts)
     
     self:_update_bounds()
 
+    -- Previous frame data
+    self.prev = {}
+
     return self
 end
 
 
 function Ball:update()
-    self.prev_vy = self.vy
+    -- store previous frame data
+    self:_store_previous_frame_data()
 
     -- apply gravity
     self.vy += self.gravity
@@ -96,8 +100,8 @@ function Ball:_on_paddle_collision(p, py)
     self.y = py - self.r
 
     -- simple collision response: invert y velocity
-    self.vy = self.prev_vy * -p.bounce + boosh * 1 --Tuning factor
-    self.vx += p.m * self.prev_vy * 0.5 -- Tuning factor
+    self.vy = self.prev.vy * -p.bounce + boosh * 1 --Tuning factor
+    self.vx += p.m * self.prev.vy * 0.5 -- Tuning factor
 end
 
 function Ball:_update_bounds()
@@ -105,6 +109,19 @@ function Ball:_update_bounds()
     self.top = self.y - self.r
     self.left = self.x - self.r
     self.right = self.x + self.r
+end
+
+function Ball:_store_previous_frame_data()
+    self.prev = {
+        x = self.x,
+        y = self.y,
+        vx = self.vx,
+        vy = self.vy,
+        top = self.top,
+        bottom = self.bottom,
+        left = self.left,
+        right = self.right
+    }
 end
 
 function Ball:_check_wall_collision(bounds)
@@ -120,14 +137,14 @@ end
 
 function Ball:_on_wall_collision(w)
     -- Simple collision response: invert velocity based on side hit
-    if self.prev_vy > 0 and self.top < w.bounds.top then
+    if self.prev.vy > 0 and self.top < w.bounds.top then
         -- Hit from top
         self.y = w.bounds.top - self.r
-        self.vy = self.prev_vy * -w.bounce
-    elseif self.prev_vy < 0 and self.bottom > w.bounds.bottom then
+        self.vy = self.prev.vy * -w.bounce
+    elseif self.prev.vy < 0 and self.bottom > w.bounds.bottom then
         -- Hit from bottom
         self.y = w.bounds.bottom + self.r
-        self.vy = self.prev_vy * -w.bounce
+        self.vy = self.prev.vy * -w.bounce
     elseif self.vx > 0 and self.left < w.bounds.left then
         -- Hit from left
         self.x = w.bounds.left - self.r

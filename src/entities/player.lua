@@ -36,12 +36,16 @@ function Player.new(opts)
 
     self:_update_endpoints()
     self:_update_math()
+
+    -- Previous frame data
+    self.prev = {}
+
     return self
 end
 
 function Player:update()
-    local prev_y1 = self.y1
-    local prev_y2 = self.y2
+    self:_store_previous_frame_data()
+
     
     -- Check for player input
     self:_controller_inputs()
@@ -58,8 +62,8 @@ function Player:update()
     self:_update_math()
 
     -- Calculate velocity at line endpoints
-    self.vy1 = self.y1 - prev_y1
-    self.vy2 = self.y2 - prev_y2
+    self.vy1 = self.y1 - self.prev.y1
+    self.vy2 = self.y2 - self.prev.y2
 
     -- Reduce shot timing
     self.prox_y1 = max(0, self.prox_y1 - 1)
@@ -89,6 +93,29 @@ function Player:draw()
         print(self.debug_prox, 40 * (self.idx + 1), 39, 7)
     end
     ]]--
+end
+
+function Player:get_boosh(b)
+    -- "Boosh" is a factor of how hard the
+    -- player hits the ball based on where
+    -- the ball collided with the paddle as 
+    -- well as their timing (prox) with the "swing"
+
+
+    -- Position on paddle (0 -> 1)
+    local pop = (b.x - self.x1) / (self.x2 - self.x1)
+    self.debug_pop = pop
+
+    -- Velocity at that `pop`
+    local vop = self.vy1 + pop * (self.vy2 - self.vy1)
+    self.debug_vop = vop
+
+    -- Timing the "swing"
+    local prox = pop < 0.5 and self.prox_y1 or self.prox_y2
+    self.debug_prox = prox
+
+    -- boosh = velocity at point minus timing factor plus some of player's velocity
+    return vop - (prox * 0.5) + (self.vy * 0.5)
 end
 
 
@@ -158,25 +185,17 @@ function Player:_controller_inputs()
    end
 end
 
-function Player:get_boosh(b)
-    -- "Boosh" is a factor of how hard the
-    -- player hits the ball based on where
-    -- the ball collided with the paddle as 
-    -- well as their timing (prox) with the "swing"
-
-
-    -- Position on paddle (0 -> 1)
-    local pop = (b.x - self.x1) / (self.x2 - self.x1)
-    self.debug_pop = pop
-
-    -- Velocity at that `pop`
-    local vop = self.vy1 + pop * (self.vy2 - self.vy1)
-    self.debug_vop = vop
-
-    -- Timing the "swing"
-    local prox = pop < 0.5 and self.prox_y1 or self.prox_y2
-    self.debug_prox = prox
-
-    -- boosh = velocity at point minus timing factor plus some of player's velocity
-    return vop - (prox * 0.5) + (self.vy * 0.5)
+function Player:_store_previous_frame_data()
+    self.prev = {
+        x = self.x,
+        y = self.y,
+        x1 = self.x1,
+        y1 = self.y1,
+        x2 = self.x2,
+        y2 = self.y2,
+        vx = self.vx,
+        vy = self.vy,
+        m = self.m,
+        c = self.c
+    }
 end
