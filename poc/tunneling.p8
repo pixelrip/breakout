@@ -43,20 +43,84 @@ function get_line_y_at_ball(b,l)
 	-- hits the line
 	return (l.m * b.x) + l.c
 end
+
+
+function log(txt)
+	printh(txt, "tunneling.p8l")
+end
 -->8
 -- collision 
 -- detection functions
 
 function ball_vs_edge(b,e)
- local ey = get_line_y_at_ball(b,e)
+	local pr = b.pr
+	local p_ey = get_line_y_at_ball(pr,e)
+	local c_ey = get_line_y_at_ball(b,e)
  
-	if b.bottom >= ey and
-				b.top <= e.bottom and
-				b.left >= e.x1 and
-				b.right <= e.x2 then
+	-- debug
+	local prev_x = b.x - b.vx
+	local prev_y = b.y - b.vy
 
-		return true
+	if pr.bottom <= p_ey and b.bottom >= c_ey then
+		-- find intersection point with lerp
+		local t = (c_ey - pr.bottom) / (b.bottom - pr.bottom)
+	
+		-- get exact collision point
+		local hit_x = pr.x + (b.x - pr.x) * t
+		local hit_y = pr.y + (b.y - pr.y) * t
+
+  		-- was collision point within line bounds?
+		if hit_x >= e.x1 and
+			hit_x <= e.x2 then
+
+			--debug
+			b.snapshots = {{x=pr.x,y=pr.y,col=1},{x=b.x,y=b.y,col=1},{x=hit_x,y=hit_y,col=2}}
+			log("ball_vs_edge():")
+			log("  p_ey:      "..p_ey)
+			log("  c_ey:      "..c_ey)
+			log("  pr. (previous frame data for ball)")
+			log("     x:      "..pr.x)
+			log("     y:      "..pr.y)
+			log("     vx:     "..pr.vx)
+			log("     vy:     "..pr.vy)
+			log("     top:    "..pr.top)
+			log("     bottom: "..pr.bottom)
+			log("     left:   "..pr.left)
+			log("     right:  "..pr.right)
+			log("  b. (current frame data for ball)")
+			log("     x:      "..b.x)
+			log("     y:      "..b.y)
+			log("     vx:     "..b.vx)
+			log("     vy:     "..b.vy)
+			log("     top:    "..b.top)
+			log("     bottom: "..b.bottom)
+			log("     left:   "..b.left)
+			log("     right:  "..b.right)
+			log("  e. (current frame data for edge)")
+			log("     x1:     "..e.x1)
+			log("     y1:     "..e.y1)
+			log("     x2:     "..e.x2)
+			log("     y2:     "..e.y2)
+			log("     m:      "..e.m)
+			log("     c:      "..e.c)
+			log("  t:         "..t)
+			log("  hit_x:     "..hit_x)
+			log("  hit_y:     "..hit_y)
+			log("  prev_x:    "..prev_x)
+			log("  prev_y:    "..prev_y)
+			
+		return true, hit_x, hit_y
+  		end
 	end
+
+	-- simple check for when ball is very close to edge
+	-- (to avoid tunneling when moving slowly)
+	local buffer = 1
+    if b.bottom > c_ey and b.bottom < c_ey + buffer then
+        if b.x >= e.x1 and b.x <= e.x2 then
+            return true, b.x, c_ey - b.r
+        end
+    end
 	
 	return false
 end
@@ -71,9 +135,8 @@ function ball:init()
 	self.x = 64
 	self.y = 0
 		
-	-- size+color
-	self.r = 2 -- radius
-	self.col = 7
+	-- radius
+	self.r = 2
 	
 	-- bounds (update_bounds())
 	self.top = 0
@@ -90,11 +153,13 @@ function ball:init()
 	
 	-- previous frame data
 	self.pr = {}
+	-- history snapshots
+	self.snapshots = {}
 end
 	
 function ball:update()
 	-- data from prev frame
-	self:update_prev_frame_data()
+	self:store_prev_frame_data()
 
  -- increase speed
 	self.vy += self.sp
@@ -109,8 +174,23 @@ end
 
 	
 function ball:draw()
-	circfill(self.x, self.y, self.r, self.col)
-	pset(self.x, self.y, 8)
+	circfill(self.x, self.y, self.r, 12)
+	pset(self.x, self.y, 7)
+	
+	-- draw snapshots
+	for s in all(self.snapshots) do
+		circfill(s.x, s.y, self.r, s.col)
+	end
+
+	-- draw a line between snapshots
+	if #self.snapshots >= 2 then
+		line(self.snapshots[1].x, self.snapshots[1].y,
+			 self.snapshots[2].x, self.snapshots[2].y, 11)
+	end
+
+	--debug
+	print("x: "..self.x,100,14,12)
+	print("y: "..self.y,100,20,12)
 end
 
 
@@ -122,7 +202,7 @@ function ball:update_bounds()
 end
 
 
-function ball:update_prev_frame_data()
+function ball:store_prev_frame_data()
 	local pr = self.pr
 	pr.x = self.x
 	pr.y = self.y
@@ -132,19 +212,17 @@ function ball:update_prev_frame_data()
 	pr.bottom = self.bottom
 	pr.left = self.left
 	pr.right = self.right
-	pr.m = self.m
-	pr.c = self.c
 end
 
 
-function ball:on_edge_collision(l)
- local ey = get_line_y_at_ball(self,l) 
+function ball:on_edge_collision(l,hit)
  
  -- correct position
- self.y = ey - self.r
+ self.x = hit[1]
+ self.y = hit[2]
  
  -- invert velocity
- self.vy = -self.vy
+ self.vy = -self.pr.vy * l.bounce * 1 --tuning
  
  -- "nudge" it based on slope
  self.vx += l.m * self.pr.vy
@@ -159,9 +237,9 @@ edge = {}
 function edge:init()
 	self.x = 64
 	self.y = 104
-	self.w = 24
-	self.a = 0.05
-	self.col = 7
+	self.w = 128
+	self.a = 0.0
+	self.bounce = 0.8
 	
 	self:update_endpoints()
 	self:update_math()
@@ -170,11 +248,21 @@ end
 function edge:update()
 	self:update_endpoints()
 	self:update_math()
+	
+	--simple up/down/left/right movement for testing
+	if btn(0) then self.x -= 1 end
+	if btn(1) then self.x += 1 end
+	if btn(2) then self.y -= 1 end
+	if btn(3) then self.y += 1 end
 end
 
 function edge:draw()
-	line(self.x1, self.y1, self.x2, self.y2, self.col)
-	pset(self.x, self.y, 8)
+	line(self.x1, self.y1, self.x2, self.y2, 8)
+	pset(self.x, self.y, 7)
+	
+	--debug:
+	print("x: "..self.x,100,2,8)
+	print("y: "..self.y,100,8,8)
 end
 
 --
@@ -212,6 +300,11 @@ box = {}
 -- _init(), _update(), _draw()
 
 function _init()
+	-- debug
+ 	log("\n\n------")
+	h, hx, hy, cy, py= 0, 0, 0, 0, 0
+
+	-- init objects
 	ball:init()
 	edge:init()
 end
@@ -221,9 +314,22 @@ function _update()
 	edge:update()
 	
 	-- collision checks
-	if ball_vs_edge(ball,edge) then
-		ball:on_edge_collision(edge)
-		edge:on_ball_collision(ball)
+	local hit, hit_x, hit_y = ball_vs_edge(ball,edge) 
+	if hit then
+	 -- debug
+	 h = hit
+	 hx = hit_x
+	 hy = hit_y
+	 py = ball.pr.y
+	 cy = ball.y
+	 
+	 --ball.vx=0
+	 --ball.vy=0
+	 --ball.gravity=0
+	 --end debug
+		
+		ball:on_edge_collision(edge, {hit_x, hit_y})
+		--edge:on_ball_collision(ball)
 	end
 end
 
@@ -233,10 +339,12 @@ function _draw()
 	edge:draw()
 	
 	--debug:
-	print(edge.x1,2,2,7)
-	print(edge.x2,2,8,7)
-	print(edge.y1,2,14,7)
-	print(edge.y2,2,20,7)
+	print("hit:   "..tostr(h),2,2,7)
+	print("hit x: "..hx,2,8,7)
+	print("hit y: "..hy,2,14,7)
+	print("cur y: "..cy,2,20,7)
+	print("prv y: "..py,2,26,7)
+	--print(edge.y2,2,20,7)
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
