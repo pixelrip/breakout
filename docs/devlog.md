@@ -1,5 +1,5 @@
 # Dev Log
-Total Time: 14hrs
+Total Time: 18hrs
 
 ## TODO:
 
@@ -13,9 +13,11 @@ Total Time: 14hrs
 ## Daily Notes
 
 ### Day 4: 2025-10-30
-- Time Worked:
+- Time Worked: 4hrs
 - Todays question: Fix borderline unshippable collision bugs or add the bricks? I may regret the choice, but given I'm likely only going to introduce more collisions (bottom of paddle, bricks, pickups) I'm going to devote today to a collision poc.
-- 
+- Began putting together proof-of-concept for "continuous collision detection" (ccd)
+- WIP POC; CCD almost working; still want tit to bounce off bt bottom/sides of the paddle as well.
+
 
 ### Day 3: 2025-10-29
 - Time Worked: 6hrs
