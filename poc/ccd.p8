@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
--- tunneling issue poc
+-- tunneling issue: continuous collision detection solution
 -- by pixelrip
 
 -- tabs:
@@ -46,7 +46,7 @@ end
 
 
 function log(txt)
-	printh(txt, "tunneling.p8l")
+	printh(txt, "ccd.p8l")
 end
 -->8
 -- collision 
@@ -56,10 +56,7 @@ function ball_vs_edge(b,e)
 	local pr = b.pr
 	local p_ey = get_line_y_at_ball(pr,e)
 	local c_ey = get_line_y_at_ball(b,e)
- 
-	-- debug
-	local prev_x = b.x - b.vx
-	local prev_y = b.y - b.vy
+
 
 	if pr.bottom <= p_ey and b.bottom >= c_ey then
 		-- find intersection point with lerp
@@ -106,8 +103,6 @@ function ball_vs_edge(b,e)
 			log("  t:         "..t)
 			log("  hit_x:     "..hit_x)
 			log("  hit_y:     "..hit_y)
-			log("  prev_x:    "..prev_x)
-			log("  prev_y:    "..prev_y)
 			
 		return true, hit_x, hit_y
   		end
@@ -193,6 +188,13 @@ function ball:draw()
 	print("y: "..self.y,100,20,12)
 end
 
+function ball:reset()
+	self.x = 64
+	self.y = 0
+	self.vx = 0
+	self.vy = 0
+end
+
 
 function ball:update_bounds()
 	self.top = self.y - self.r
@@ -248,12 +250,6 @@ end
 function edge:update()
 	self:update_endpoints()
 	self:update_math()
-	
-	--simple up/down/left/right movement for testing
-	if btn(0) then self.x -= 1 end
-	if btn(1) then self.x += 1 end
-	if btn(2) then self.y -= 1 end
-	if btn(3) then self.y += 1 end
 end
 
 function edge:draw()
@@ -302,7 +298,6 @@ box = {}
 function _init()
 	-- debug
  	log("\n\n------")
-	h, hx, hy, cy, py= 0, 0, 0, 0, 0
 
 	-- init objects
 	ball:init()
@@ -316,35 +311,22 @@ function _update()
 	-- collision checks
 	local hit, hit_x, hit_y = ball_vs_edge(ball,edge) 
 	if hit then
-	 -- debug
-	 h = hit
-	 hx = hit_x
-	 hy = hit_y
-	 py = ball.pr.y
-	 cy = ball.y
-	 
-	 --ball.vx=0
-	 --ball.vy=0
-	 --ball.gravity=0
-	 --end debug
-		
 		ball:on_edge_collision(edge, {hit_x, hit_y})
 		--edge:on_ball_collision(ball)
+	end
+
+	-- simple reset if ball goes off screen
+	if ball.y > 200 then
+		ball:reset()
 	end
 end
 
 function _draw()
- cls(0)
+	cls(0)
 	ball:draw()
 	edge:draw()
-	
-	--debug:
-	print("hit:   "..tostr(h),2,2,7)
-	print("hit x: "..hx,2,8,7)
-	print("hit y: "..hy,2,14,7)
-	print("cur y: "..cy,2,20,7)
-	print("prv y: "..py,2,26,7)
-	--print(edge.y2,2,20,7)
+
+
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
