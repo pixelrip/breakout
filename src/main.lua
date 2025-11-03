@@ -51,7 +51,7 @@ function _init()
 
     ball = Ball.new({
         x = 28,
-        y = 20
+        y = 64
     })
 
 
