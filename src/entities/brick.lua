@@ -26,10 +26,20 @@ function Brick.new(opts)
 
     self.bounds = get_bounds(self) 
 
-    -- TODO: Do I need this?
-    -- self.prev = {}
+    -- Store previous frame data
+    self.prev = {}
 
     return self
+end
+
+function Brick:update()
+    -- Store previous frame data
+    self:_store_previous_frame_data()
+
+    -- TBD: Moving bricks, animation, etc
+
+    -- Update bounds
+    self.bounds = get_bounds(self)
 end
 
 function Brick:draw()
@@ -44,4 +54,17 @@ function Brick:draw()
     rrect(self.x, self.y, self.w, self.h, 0, col_primary)
     line(bx1, by, x2, by, col_secondary)
     line(x2, ty1, x2, ty2, col_secondary)
+end
+
+-- "Private" Methods
+
+function Brick:_store_previous_frame_data()
+    self.prev = {
+        x = self.x,
+        y = self.y,
+        vx = self.vx,
+        vy = self.vy,
+        hp = self.hp,
+        bounds = self.bounds
+    }
 end
