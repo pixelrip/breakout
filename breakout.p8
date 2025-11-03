@@ -17,6 +17,7 @@ __lua__
 #include src/entities/wall.lua
 #include src/entities/ball.lua
 #include src/entities/player.lua
+#include src/entities/brick.lua
 
 -- Main game loops
 #include src/main.lua

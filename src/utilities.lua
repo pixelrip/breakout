@@ -32,3 +32,12 @@ end
 function rnd_between(min, max)
     return flr(rnd(max - min + 1) + min)
 end
+
+function get_bounds(obj)
+    return {
+        left = obj.x,
+        right = obj.x + obj.w - 1,
+        top = obj.y,
+        bottom = obj.y + obj.h - 1
+    }
+end

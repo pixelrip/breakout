@@ -35,7 +35,7 @@ function _init()
       height = 2,
       color = 12,
       vx = 0.5  -- Moves right at 0.5 pixels/frame
-  }), "wall")
+    }), "wall")
 
     p1 = Player.new({
         x = 28,
@@ -54,12 +54,28 @@ function _init()
         y = 20
     })
 
+
     world:add(p1, "player")
     world:add(p2, "player")
     world:add(ball, "ball")
 
-    -- Input manager
+
+    
+    for i = 4,114,10 do
+        for j = 14,39,5 do
+            world:add(Brick.new({
+                x = i,
+                y = j,
+                width = 10,
+                height = 5,
+                hp = 1,
+            }), "brick")
+        end
+    end
+    
+
     input:init()
+
 end
 
 function _update()
