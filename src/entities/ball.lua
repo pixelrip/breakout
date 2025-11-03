@@ -5,6 +5,8 @@ Ball.__index = Ball
 
 setmetatable(Ball, {__index = Entity})
 
+Ball.DEBUG = true
+
 function Ball.new(opts) 
     -- Base entity
     local self = Entity.new({
@@ -56,7 +58,7 @@ function Ball:update()
     if obj then
         if obj_type == "brick" then
             self:_on_brick_collision(obj, collision_info)
-        else
+        elseif obj_type == "wall" then
             self:_on_wall_collision(obj, collision_info)
         end
     end
@@ -74,6 +76,10 @@ end
 function Ball:draw()
     circfill(self.x, self.y, self.r, self.color)
     pset(self.x, self.y, 8)
+
+    if self.DEBUG then
+        print(self:_get_speed(), 2, 122, 7)
+    end
 end
 
 -- "Private" Methods
@@ -227,12 +233,14 @@ end
 function Ball:_on_brick_collision(b, collision_info)
     -- Apply collision physics (same as wall)
     self:_apply_box_collision(b, collision_info)
+    b:take_damage(self:_calculate_damage())
+end
 
-    -- Apply damage (1 damage per hit)
-    b.hp -= 1
+function Ball:_calculate_damage()
+    -- Damage based on ball speed
+    return flr(self:_get_speed()) -- Tuning factor
+end
 
-    -- Destroy brick if hp depleted
-    if b.hp <= 0 then
-        world:remove(b, "brick")
-    end
+function Ball:_get_speed()
+    return sqrt(self.vx^2 + self.vy^2)
 end

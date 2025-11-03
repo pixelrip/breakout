@@ -5,6 +5,8 @@ Brick.__index = Brick
 
 setmetatable(Brick, {__index = Entity})
 
+Brick.DEBUG = true
+
 function Brick.new(opts)
     -- Base entity
     local self = Entity.new({
@@ -17,7 +19,7 @@ function Brick.new(opts)
     self.w = opts.width or 10
     self.h = opts.height or 5
     self.color = opts.color or {7,6}
-    self.hp = opts.hp or 1
+    self.hp = opts.hp or 6
     self.bounce = opts.bounce or 0.8
 
     -- Velocity (TBD)
@@ -54,6 +56,17 @@ function Brick:draw()
     rrect(self.x, self.y, self.w, self.h, 0, col_primary)
     line(bx1, by, x2, by, col_secondary)
     line(x2, ty1, x2, ty2, col_secondary)
+
+    if self.DEBUG then
+        print(self.hp, self.x + 1, self.y + 1, 14)
+    end
+end
+
+function Brick:take_damage(amount)
+    self.hp -= amount
+    if self.hp <= 0 then
+        world:remove(self, "brick")
+    end
 end
 
 -- "Private" Methods

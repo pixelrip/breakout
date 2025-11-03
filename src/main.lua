@@ -68,7 +68,6 @@ function _init()
                 y = j,
                 width = 10,
                 height = 5,
-                hp = 1,
             }), "brick")
         end
     end
@@ -85,6 +84,6 @@ function _update()
 end
 
 function _draw()
-    cls(2)
+    cls(1)
     world:draw()
 end
