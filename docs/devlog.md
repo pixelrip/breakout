@@ -1,5 +1,5 @@
 # Dev Log
-Total Time: 23hrs
+Total Time: 27hrs
 
 ## TODO:
 
@@ -11,6 +11,15 @@ Total Time: 23hrs
 ---
 
 ## Daily Notes
+
+### Day 6: 2025-11-03
+- Time Worked: 4 hrs
+- Create bricks entity
+- Re-used wall collision logic for bricks
+- Added ability to destroy bricks
+- Added game object to track scoring, combos, etc. Might should be renamed scoring? scoremanager?
+- WIP: Game pieces coming together. Next: number of balls + game state?
+
 
 ### Day 5: 2025-10-31
 - Time Worked: 5hrs
