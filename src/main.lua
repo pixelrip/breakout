@@ -74,6 +74,7 @@ function _init()
     
 
     input:init()
+    game:reset()
 
 end
 
@@ -86,4 +87,5 @@ end
 function _draw()
     cls(1)
     world:draw()
+    game:draw_hud()
 end

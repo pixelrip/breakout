@@ -20,6 +20,7 @@ function Brick.new(opts)
     self.h = opts.height or 5
     self.color = opts.color or {7,6}
     self.hp = opts.hp or 6
+    self.val = opts.val or 1
     self.bounce = opts.bounce or 0.8
 
     -- Velocity (TBD)
@@ -62,11 +63,19 @@ function Brick:draw()
     end
 end
 
-function Brick:take_damage(amount)
+function Brick:on_ball_collision(amount)
     self.hp -= amount
     if self.hp <= 0 then
-        world:remove(self, "brick")
+        self:explode()
+        game:on_brick_destroyed(self.val)
     end
+end
+
+function Brick:explode()
+    -- TBD: particle effects, sound, etc 
+    if self.hp > 0 then return end
+
+    world:remove(self, "brick")
 end
 
 -- "Private" Methods

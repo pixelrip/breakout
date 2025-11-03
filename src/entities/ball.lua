@@ -47,19 +47,20 @@ function Ball:update()
     -- update bounds
     self:_update_bounds()
 
-    -- Check paddle collision
-    local paddle, hit_pos = self:_check_paddle_collisions()
-    if paddle then
-        self:_on_player_collision(paddle, hit_pos)
+    -- Check player collision
+    local player, hit_pos = self:_check_player_collisions()
+    if player then
+        self:handle_player_collision(player, hit_pos)
+        player:handle_ball_collision(self)
     end
 
     -- Check wall and brick collisions (find earliest)
     local obj, collision_info, obj_type = self:_check_box_collisions()
     if obj then
         if obj_type == "brick" then
-            self:_on_brick_collision(obj, collision_info)
+            self:handle_brick_collision(obj, collision_info)
         elseif obj_type == "wall" then
-            self:_on_wall_collision(obj, collision_info)
+            self:handle_wall_collision(obj, collision_info)
         end
     end
 
@@ -84,7 +85,7 @@ end
 
 -- "Private" Methods
 
-function Ball:_on_player_collision(p, h)
+function Ball:handle_player_collision(p, h)
 
     local boosh = p:get_boosh(self)
 
@@ -120,7 +121,7 @@ function Ball:_store_previous_frame_data()
     }
 end
 
-function Ball:_check_paddle_collisions()
+function Ball:_check_player_collisions()
     for p in all(world.players) do
         local hit, hit_pos = circle_vs_line(self, p)
         if hit then
@@ -226,14 +227,14 @@ function Ball:_apply_box_collision(obj, collision_info)
     self:_update_bounds()
 end
 
-function Ball:_on_wall_collision(w, collision_info)
+function Ball:handle_wall_collision(w, collision_info)
     self:_apply_box_collision(w, collision_info)
 end
 
-function Ball:_on_brick_collision(b, collision_info)
+function Ball:handle_brick_collision(brick, collision_info)
     -- Apply collision physics (same as wall)
-    self:_apply_box_collision(b, collision_info)
-    b:take_damage(self:_calculate_damage())
+    self:_apply_box_collision(brick, collision_info)
+    brick:on_ball_collision(self:_calculate_damage())
 end
 
 function Ball:_calculate_damage()

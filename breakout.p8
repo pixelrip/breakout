@@ -8,6 +8,7 @@ __lua__
 #include src/utilities.lua
 #include src/collision.lua
 #include src/world.lua
+#include src/game.lua
 
 -- Input manager
 #include src/input.lua

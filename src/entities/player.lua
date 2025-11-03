@@ -133,6 +133,10 @@ function Player:_update_endpoints()
     self.y2 = self.y + dy
 end
 
+function Player:handle_ball_collision(b)
+    game:update_last_player_hit(self.idx)
+end
+
 function Player:_update_math()
     self.bottom = max(self.y1, self.y2)
     self.m = get_slope(self)
