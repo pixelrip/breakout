@@ -3,6 +3,7 @@ world = {
     players = {},
     balls = {},
     walls = {},
+    bricks = {},
 }
 
 function world:add(e, type)
@@ -17,6 +18,8 @@ function world:add(e, type)
         add(self.balls, e)
     elseif type == "wall" then
         add(self.walls, e)
+    elseif type == "brick" then
+        add(self.bricks, e)
     end
 end
 
