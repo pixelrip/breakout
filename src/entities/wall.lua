@@ -50,6 +50,7 @@ end
 
 -- "Private" Methods
 
+-- TODO: Use utility function with other rectangles (bricks, etc)
 function Wall:_update_bounds()
     self.bounds = {
         left = self.x,
