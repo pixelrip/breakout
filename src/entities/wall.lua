@@ -24,7 +24,7 @@ function Wall.new(opts)
     self.vx = opts.vx or 0
     self.vy = opts.vy or 0
 
-    self:_update_bounds()
+    self.bounds = get_bounds(self) 
 
     -- Previous frame data
     self.prev = {}
@@ -41,7 +41,7 @@ function Wall:update()
     self.y += self.vy
 
     -- Update bounds
-    self:_update_bounds()
+    self.bounds = get_bounds(self) 
 end
 
 function Wall:draw()
@@ -50,15 +50,7 @@ end
 
 -- "Private" Methods
 
--- TODO: Use utility function with other rectangles (bricks, etc)
-function Wall:_update_bounds()
-    self.bounds = {
-        left = self.x,
-        right = self.x + self.w - 1,
-        top = self.y,
-        bottom = self.y + self.h - 1
-    }
-end
+
 
 function Wall:_store_previous_frame_data()
     self.prev = {
