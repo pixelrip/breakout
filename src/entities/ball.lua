@@ -51,16 +51,14 @@ function Ball:update()
         self:_on_player_collision(paddle, hit_pos)
     end
 
-    -- Check wall collision
-    local wall, collision_info = self:_check_wall_collisions()
-    if wall then
-        self:_on_wall_collision(wall, collision_info)
-    end
-
-    -- Check brick collision
-    local brick, collision_info = self:_check_brick_collisions()
-    if brick then
-        self:_on_brick_collision(brick, collision_info)
+    -- Check wall and brick collisions (find earliest)
+    local obj, collision_info, obj_type = self:_check_box_collisions()
+    if obj then
+        if obj_type == "brick" then
+            self:_on_brick_collision(obj, collision_info)
+        else
+            self:_on_wall_collision(obj, collision_info)
+        end
     end
 
     -- DEBUG: Return ball if off screen
@@ -126,44 +124,59 @@ function Ball:_check_paddle_collisions()
     return nil, nil
 end
 
-function Ball:_check_wall_collisions()
+function Ball:_check_box_collisions()
     local earliest_collision = nil
-    local earliest_wall = nil
+    local earliest_obj = nil
     local earliest_t = 999
+    local obj_type = nil
 
+    -- Check walls
     for w in all(world.walls) do
         local hit, collision_info = box_vs_box(self, w)
         if hit and collision_info and collision_info.t < earliest_t then
             earliest_t = collision_info.t
             earliest_collision = collision_info
-            earliest_wall = w
+            earliest_obj = w
+            obj_type = "wall"
         end
     end
 
-    return earliest_wall, earliest_collision
+    -- Check bricks
+    for b in all(world.bricks) do
+        local hit, collision_info = box_vs_box(self, b)
+        if hit and collision_info and collision_info.t < earliest_t then
+            earliest_t = collision_info.t
+            earliest_collision = collision_info
+            earliest_obj = b
+            obj_type = "brick"
+        end
+    end
+
+    return earliest_obj, earliest_collision, obj_type
 end
 
 
-function Ball:_on_wall_collision(w, collision_info)
+-- Shared collision response for box collisions (walls/bricks)
+function Ball:_apply_box_collision(obj, collision_info)
     -- Handle collision based on collision normal
     -- If collision_info is nil (fallback static collision), use old method
     if not collision_info then
         local ball_bounds = self.bounds
-        local wall_bounds = w.bounds
+        local obj_bounds = obj.bounds
 
         -- Simple collision response: invert velocity based on side hit
-        if self.prev.vy > 0 and ball_bounds.top < wall_bounds.top then
-            self.y = wall_bounds.top - self.r
-            self.vy = self.prev.vy * -w.bounce
-        elseif self.prev.vy < 0 and ball_bounds.bottom > wall_bounds.bottom then
-            self.y = wall_bounds.bottom + self.r
-            self.vy = self.prev.vy * -w.bounce
-        elseif self.vx > 0 and ball_bounds.left < wall_bounds.left then
-            self.x = wall_bounds.left - self.r
-            self.vx = self.vx * -w.bounce
-        elseif self.vx < 0 and ball_bounds.right > wall_bounds.right then
-            self.x = wall_bounds.right + self.r
-            self.vx = self.vx * -w.bounce
+        if self.prev.vy > 0 and ball_bounds.top < obj_bounds.top then
+            self.y = obj_bounds.top - self.r
+            self.vy = self.prev.vy * -obj.bounce
+        elseif self.prev.vy < 0 and ball_bounds.bottom > obj_bounds.bottom then
+            self.y = obj_bounds.bottom + self.r
+            self.vy = self.prev.vy * -obj.bounce
+        elseif self.vx > 0 and ball_bounds.left < obj_bounds.left then
+            self.x = obj_bounds.left - self.r
+            self.vx = self.vx * -obj.bounce
+        elseif self.vx < 0 and ball_bounds.right > obj_bounds.right then
+            self.x = obj_bounds.right + self.r
+            self.vx = self.vx * -obj.bounce
         end
         return
     end
@@ -175,9 +188,9 @@ function Ball:_on_wall_collision(w, collision_info)
     local vel_x = self.x - self.prev.x
     local vel_y = self.y - self.prev.y
 
-    -- Get wall velocity (if moving)
-    local wall_vx = collision_info.b_vx or 0
-    local wall_vy = collision_info.b_vy or 0
+    -- Get object velocity (if moving)
+    local obj_vx = collision_info.b_vx or 0
+    local obj_vy = collision_info.b_vy or 0
 
     -- Move to collision point
     self.x = self.prev.x + vel_x * t
@@ -185,17 +198,17 @@ function Ball:_on_wall_collision(w, collision_info)
 
     -- Apply bounce based on collision normal
     if collision_info.normal_x ~= 0 then
-        -- Bounce relative velocity and add wall velocity
-        local relative_vx = self.vx - wall_vx
-        self.vx = relative_vx * -w.bounce + wall_vx
-        vel_x = vel_x * -w.bounce + wall_vx
+        -- Bounce relative velocity and add object velocity
+        local relative_vx = self.vx - obj_vx
+        self.vx = relative_vx * -obj.bounce + obj_vx
+        vel_x = vel_x * -obj.bounce + obj_vx
     end
 
     if collision_info.normal_y ~= 0 then
-        -- Bounce relative velocity and add wall velocity
-        local relative_vy = self.vy - wall_vy
-        self.vy = relative_vy * -w.bounce + wall_vy
-        vel_y = vel_y * -w.bounce + wall_vy
+        -- Bounce relative velocity and add object velocity
+        local relative_vy = self.vy - obj_vy
+        self.vy = relative_vy * -obj.bounce + obj_vy
+        vel_y = vel_y * -obj.bounce + obj_vy
     end
 
     -- Apply remaining motion for (1-t) of the frame
@@ -207,10 +220,19 @@ function Ball:_on_wall_collision(w, collision_info)
     self:_update_bounds()
 end
 
-
-function Ball:_check_brick_collisions()
-    
+function Ball:_on_wall_collision(w, collision_info)
+    self:_apply_box_collision(w, collision_info)
 end
 
-function Ball:_on_brick_collision()
+function Ball:_on_brick_collision(b, collision_info)
+    -- Apply collision physics (same as wall)
+    self:_apply_box_collision(b, collision_info)
+
+    -- Apply damage (1 damage per hit)
+    b.hp -= 1
+
+    -- Destroy brick if hp depleted
+    if b.hp <= 0 then
+        world:remove(b, "brick")
+    end
 end
