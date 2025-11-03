@@ -23,6 +23,21 @@ function world:add(e, type)
     end
 end
 
+function world:remove(e, type)
+    del(self.entities, e)
+
+    -- Remove from specific lists
+    if type == "player" then
+        del(self.players, e)
+    elseif type == "ball" then
+        del(self.balls, e)
+    elseif type == "wall" then
+        del(self.walls, e)
+    elseif type == "brick" then
+        del(self.bricks, e)
+    end
+end
+
 function world:update()
     for e in all(self.entities) do
         e:update()
