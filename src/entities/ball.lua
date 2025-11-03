@@ -9,7 +9,7 @@ function Ball.new(opts)
     -- Base entity
     local self = Entity.new({
         x = opts.x or 64,
-        y = opts.y or 10,
+        y = opts.y or 64,
     })
 
     setmetatable(self, Ball)
@@ -57,10 +57,15 @@ function Ball:update()
         self:_on_wall_collision(wall, collision_info)
     end
 
+    -- Check brick collision
+    local brick, collision_info = self:_check_brick_collisions()
+    if brick then
+        self:_on_brick_collision(brick, collision_info)
+    end
 
     -- DEBUG: Return ball if off screen
     if self.y  > 200 then
-        self.y = 20
+        self.y = 64
         self.x = 64
         self.vy = 0
         self.vx = 0
@@ -200,4 +205,12 @@ function Ball:_on_wall_collision(w, collision_info)
 
     -- Update bounds after position correction
     self:_update_bounds()
+end
+
+
+function Ball:_check_brick_collisions()
+    
+end
+
+function Ball:_on_brick_collision()
 end
