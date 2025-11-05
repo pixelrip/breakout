@@ -14,6 +14,12 @@ __lua__
 #include src/managers/game.lua
 #include src/managers/input.lua
 
+-- State
+#include src/state/manager.lua
+#include src/state/title.lua
+#include src/state/playing.lua
+#include src/state/gameover.lua
+
 -- Entities
 #include src/entities/base/base.lua
 #include src/entities/wall.lua

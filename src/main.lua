@@ -1,88 +1,25 @@
 DEBUG = true
 
 function _init()
-    log("\n\n --------------------")
-    color:init()
-        
-    world:add(Wall.new({
-        x = 0,
-        y = 0,
-        width = 2,
-        height = 128,
-    }), "wall")
+  log("\n\n --------------------")
 
-    world:add(Wall.new({
-        x = 126,
-        y = 0,
-        width = 2,
-        height = 128,
-    }), "wall")
+  -- initialize core systems
+  color:init()
 
-    world:add(Wall.new({
-        x = 0,
-        y = 0,
-        width = 128,
-        height = 2,
-    }), "wall")
-    
+  -- register game states
+  state:register("title", state_title)
+  state:register("playing", state_playing)
+  state:register("gameover", state_gameover)
 
-    world:add(Wall.new({
-      x = 0,
-      y = 60,
-      width = 28,
-      height = 2,
-      vx = 0.5  -- Moves right at 0.5 pixels/frame
-    }), "wall")
-
-    p1 = Player.new({
-        x = 28,
-        y = 120,
-        idx = 0
-    })
-
-    p2 = Player.new({
-        x = 93,
-        y = 120,
-        idx = 1
-    })
-
-    ball = Ball.new({
-        x = 28,
-        y = 64
-    })
-
-
-    world:add(p1, "player")
-    world:add(p2, "player")
-    world:add(ball, "ball")
-
-
-    
-    for i = 4,114,10 do
-        for j = 14,39,5 do
-            world:add(Brick.new({
-                x = i,
-                y = j,
-                width = 10,
-                height = 5,
-            }), "brick")
-        end
-    end
-    
-
-    input:init()
-    game:reset()
-
+  -- start at title screen
+  state:set("title")
 end
 
 function _update()
-
-    input:update()
-    world:update()
+  state:update()
 end
 
 function _draw()
-    cls(get_color("black"))
-    world:draw()
-    game:draw_hud()
+  cls(get_color("black"))
+  state:draw()
 end
