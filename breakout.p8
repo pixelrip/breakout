@@ -7,6 +7,7 @@ __lua__
 -- Helpers
 #include src/utilities.lua
 #include src/collision.lua
+#include src/color.lua
 #include src/world.lua
 #include src/game.lua
 

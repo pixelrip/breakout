@@ -21,7 +21,7 @@ function Ball.new(opts)
     self.vy = 0
     self.r = opts.r or 2
     
-    self.color = opts.color or 7
+    self.color = get_color("white")
     self.gravity = opts.gravity or 0.1
     
     self:_update_bounds()

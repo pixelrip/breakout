@@ -2,13 +2,13 @@ DEBUG = true
 
 function _init()
     log("\n\n --------------------")
+    color:init()
         
     world:add(Wall.new({
         x = 0,
         y = 0,
         width = 2,
         height = 128,
-        color = 10
     }), "wall")
 
     world:add(Wall.new({
@@ -16,7 +16,6 @@ function _init()
         y = 0,
         width = 2,
         height = 128,
-        color = 10
     }), "wall")
 
     world:add(Wall.new({
@@ -24,7 +23,6 @@ function _init()
         y = 0,
         width = 128,
         height = 2,
-        color = 10
     }), "wall")
     
 
@@ -33,7 +31,6 @@ function _init()
       y = 60,
       width = 28,
       height = 2,
-      color = 12,
       vx = 0.5  -- Moves right at 0.5 pixels/frame
     }), "wall")
 
@@ -85,7 +82,7 @@ function _update()
 end
 
 function _draw()
-    cls(1)
+    cls(get_color("black"))
     world:draw()
     game:draw_hud()
 end
