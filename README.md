@@ -1,6 +1,6 @@
 # 20 Games Challege Game #02: Breakout
 
-A simple Breakout clone.
+A not-quite simple Breakout clone.
 
 ## The 20 Games Challenge
 
@@ -30,7 +30,7 @@ breakout/
 ├── src/                   # Source code
 │   ├── *.lua              # Various game "modules"
 │   └── main.lua           # Entry point with _init, _update, _draw
-├── flappy.p8              # Main P8 file; includes /src files
+├── breakout.p8              # Main P8 file; includes /src files
 └── README.md              # Main project README
 ```
 
