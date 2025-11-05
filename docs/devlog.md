@@ -1,8 +1,7 @@
 # Dev Log
-Total Time: 27hrs
+Total Time: 29.5hrs
 
 ## TODO:
-- Implement game state
 - Start game with 4 balls
 - Pickups
      - Extra ball
@@ -32,11 +31,12 @@ Total Time: 27hrs
 ## Daily Notes
 
 ### Day 7: 2025-11-05
-- Time Worked:
+- Time Worked: 2.5hrs
 - Added color palette swapping 
 - Set up bricks to change color based on HP
 - Current token count: 3612 (~32%)
-- 
+- Implemented basic state for game (title/playing/gameover): 3950
+    - Not quite sure how levels will fit; tbd
 
 
 ### Day 6: 2025-11-03
