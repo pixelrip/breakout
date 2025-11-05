@@ -33,7 +33,8 @@ Total Time: 27hrs
 
 ### Day 7: 2025-11-05
 - Time Worked:
-- Added color palette swapping and set up bricks to change color based on HP
+- Added color palette swapping 
+- Set up bricks to change color based on HP
 - Current token count: 3612 (~32%)
 - 
 
