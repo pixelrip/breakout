@@ -2,6 +2,25 @@
 Total Time: 27hrs
 
 ## TODO:
+- Implement game state
+- Start game with 4 balls
+- Pickups
+     - Extra ball
+     - Multi-ball
+- Visual effects/particle effects
+    - Paddle trail
+    - Ball trail
+    - Ball v Paddle
+    - Ball v Brick
+    - Ball v Wall
+    - Brick destroyed
+- Speed ball (10+) smashes through multiple bricks
+- SFX
+    - Ball v wall
+    - Ball v paddle
+    - Ball v bricks
+    - Combo up
+- High score tracking
 
 ## Possible optimizations:
 - [Shrinko8](https://github.com/thisismypassport/shrinko8)
@@ -11,6 +30,13 @@ Total Time: 27hrs
 ---
 
 ## Daily Notes
+
+### Day 7: 2025-11-05
+- Time Worked:
+- Added color palette swapping and set up bricks to change color based on HP
+- Current token count: 3612 (~32%)
+- 
+
 
 ### Day 6: 2025-11-03
 - Time Worked: 4 hrs
