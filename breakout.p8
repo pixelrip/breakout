@@ -5,14 +5,14 @@ __lua__
 -- by pixelrip
 
 -- Helpers
-#include src/utilities.lua
-#include src/collision.lua
-#include src/color.lua
-#include src/world.lua
-#include src/game.lua
+#include src/utils/helpers.lua
+#include src/utils/collision.lua
 
--- Input manager
-#include src/input.lua
+-- Managers
+#include src/managers/color.lua
+#include src/managers/world.lua
+#include src/managers/game.lua
+#include src/managers/input.lua
 
 -- Entities
 #include src/entities/base/base.lua
