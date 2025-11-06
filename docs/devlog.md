@@ -30,6 +30,11 @@ Total Time: 29.5hrs
 
 ## Daily Notes
 
+### Day 8: 2025-11-06
+- Time worked: 1hr
+- Updated functionality in title screen
+- Fixed actually starting with 1 or 2 players, doesn't matter which
+
 ### Day 7: 2025-11-05
 - Time Worked: 2.5hrs
 - Added color palette swapping 

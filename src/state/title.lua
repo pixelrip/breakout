@@ -1,23 +1,29 @@
 -- title screen state
 
 state_title = {
-  num_players = 1,
+  num_players = 0,
+  p1_joined = false,
+  p2_joined = false
 }
 
 function state_title:init()
-  self.num_players = 1
+  self.p1_joined = false
+  self.p2_joined = false
 end
 
 function state_title:update()
-  -- toggle player count with up/down
-  if btnp(2) or btnp(3) then  -- up or down
-    self.num_players = 3 - self.num_players  -- toggle between 1 and 2
+  if btn(4,0) and not self.p1_joined then
+    self.p1_joined = true
+    self.num_players += 1
   end
 
-  -- start game with X button
-  if btnp(5) then
-    state_playing.num_players = self.num_players
-    state:set("playing")
+  if btn(4,1) and not self.p2_joined then
+    self.p2_joined = true
+    self.num_players += 1
+  end
+
+  if self.num_players > 0 and (btn(5,0) or btn(5,1)) then
+    state:set("playing", {self.p1_joined, self.p2_joined})
   end
 end
 
@@ -25,12 +31,24 @@ function state_title:draw()
   -- title
   print("breakout", 44, 40, 7)
 
-  -- player selection
-  local c1 = self.num_players == 1 and 11 or 5
-  local c2 = self.num_players == 2 and 11 or 5
-  print("1 player", 44, 60, c1)
-  print("2 player", 44, 68, c2)
+  -- player 1
+  print("player 1", 16, 60, get_color("p1"))
+  if self.p1_joined then
+    print("joined", 20, 68, get_color("p1"))
+  else
+    print(chr(142).." join", 18, 68, get_color("p2"))  
+  end
+  
+  -- player 2
+  print("player 2", 79, 60, get_color("s1"))
+  if self.p2_joined then
+    print("joined", 83, 68, get_color("s1"))
+  else
+    print(chr(142).." join", 81, 68, get_color("s2"))
+  end
 
-  -- instructions
-  print("press x to start", 28, 90, 6)
+  -- start game
+  if self.num_players > 0 then
+    print("press "..chr(151).." to start", 30, 100, get_color("white")) -- text is 67 pixels wide
+  end
 end

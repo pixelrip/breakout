@@ -1,10 +1,7 @@
 -- playing state
+state_playing = {}
 
-state_playing = {
-  num_players = 1,
-}
-
-function state_playing:init()
+function state_playing:init(players)
   -- clear world
   world.players = {}
   world.balls = {}
@@ -42,27 +39,20 @@ function state_playing:init()
     vx = 0.5
   }), "wall")
 
-  -- add player(s)
-  if self.num_players == 1 then
-    local p1 = Player.new({
-      x = 64,
-      y = 120,
-      idx = 0
-    })
-    world:add(p1, "player")
-  else
-    local p1 = Player.new({
+  if players[1] then
+    world:add(Player.new({
       x = 28,
       y = 120,
       idx = 0
-    })
-    local p2 = Player.new({
+    }), "player")
+  end
+
+  if players[2] then
+    world:add(Player.new({
       x = 93,
       y = 120,
       idx = 1
-    })
-    world:add(p1, "player")
-    world:add(p2, "player")
+    }), "player")
   end
 
   -- add ball

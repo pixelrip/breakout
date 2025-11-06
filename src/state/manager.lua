@@ -10,7 +10,7 @@ function state:register(name, state_obj)
   self.states[name] = state_obj
 end
 
-function state:set(name)
+function state:set(name, ...)
   if self.current then
     local old = self.states[self.current]
     if old.exit then old:exit() end
@@ -18,7 +18,7 @@ function state:set(name)
 
   self.current = name
   local new = self.states[name]
-  if new.init then new:init() end
+  if new.init then new:init(...) end
 end
 
 function state:update()
