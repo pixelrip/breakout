@@ -67,6 +67,17 @@ function Brick:on_ball_collision(amount)
     if self.hp <= 0 then
         self:explode()
         game:on_brick_destroyed(self.val)
+    else
+        --small particle hit effect based on "amount"
+        local cx = self.x + self.w / 2
+        local cy = self.y + self.h / 2
+        particles:spawn_explosion(
+            cx, cy,
+            amount * 2,  -- particle count
+            get_color("p3"),
+            get_color("p5"),
+            {size = 0, speed = 1.0, life = 6, gravity = false, friction = 0.85}
+        )
     end
 end
 
