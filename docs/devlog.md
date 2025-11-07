@@ -1,24 +1,20 @@
 # Dev Log
-Total Time: 30.5hrs
+Total Time: 33.5hrs
 
 ## TODO:
-- Start game with 4 balls
-- Pickups
-     - Extra ball
-     - Multi-ball
 - Visual effects/particle effects
-    - Paddle trail
     - Ball trail
     - Ball v Paddle
-    - Ball v Brick
     - Ball v Wall
-    - Brick destroyed
-- Speed ball (10+) smashes through multiple bricks
 - SFX
     - Ball v wall
     - Ball v paddle
     - Ball v bricks
     - Combo up
+- Levels
+- Pickups
+     - Extra ball
+     - Multi-ball
 - High score tracking
 
 ## Possible optimizations:
@@ -29,6 +25,13 @@ Total Time: 30.5hrs
 ---
 
 ## Daily Notes
+
+### Day 9: 2025-11-07
+- Time Worked: 3hrs
+- Added mechanic for fast balls to smash multiple bricks
+- Added particle system and bricks explosion; tokens: 4582
+- Simple wall styling for now, was thinking big, but it just can't be a priority right now
+- "Waterfall" particles off of the player paddles
 
 ### Day 8: 2025-11-06
 - Time worked: 1hr
