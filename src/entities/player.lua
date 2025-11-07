@@ -21,7 +21,6 @@ function Player.new(opts)
 
     self.w = opts.w or 24
     self.a = opts.a or 0
-    self.color = opts.color or 7
     self.bounce = opts.bounce or 0.8
 
     -- Movement Defaults
@@ -71,8 +70,7 @@ function Player:update()
 end
 
 function Player:draw()
-    line(self.x1, self.y1, self.x2, self.y2, self.color)
-    pset(self.x, self.y, 8)
+    line(self.x1, self.y1, self.x2, self.y2, WHITE)
 
     -- DEBUG
     --[[
