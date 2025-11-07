@@ -28,6 +28,7 @@ function state_title:update()
 end
 
 function state_title:draw()
+  -- TODO: use centering functions
   -- title
   print("breakout", 44, 40, 7)
 

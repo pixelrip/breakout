@@ -31,6 +31,7 @@ function state_playing:init(players)
   }), "wall")
 
   -- add moving wall
+  --[[
   world:add(Wall.new({
     x = 0,
     y = 60,
@@ -38,6 +39,7 @@ function state_playing:init(players)
     height = 2,
     vx = 0.5
   }), "wall")
+]]--
 
   if players[1] then
     world:add(Player.new({

@@ -43,7 +43,7 @@ end
 
 function game:draw_hud()
   -- draw score and combo at top of screen
-  print("score: "..self.score, 2, 2, 7)
-  print("combo: x"..self.combo, 80, 2, 7)
+  print(self.score, 4, 0, get_color("white"))
+  print_right_aligned("x"..self.combo, 124, 0, {col=get_color("white")})
 
 end

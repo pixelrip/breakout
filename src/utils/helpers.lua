@@ -41,3 +41,24 @@ function get_bounds(obj)
         bottom = obj.y + obj.h - 1
     }
 end
+
+function print_centered(txt, y, opts)
+    local opts = opts or {}
+    local col = opts.col or 7
+    local x = opts.x or 0
+    local w = opts.w or 128
+    local txt_width = #txt * 4
+
+    x = x + ((w - txt_width) / 2)
+    print(txt, x, y, col)
+end
+
+function print_right_aligned(txt, x, y, opts)
+    local opts = opts or {}
+    local col = opts.col or 7
+    local w = opts.w or 128
+    local txt_width = #txt * 4
+
+    x = x - txt_width
+    print(txt, x, y, col)
+end
