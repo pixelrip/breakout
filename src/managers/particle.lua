@@ -3,7 +3,7 @@
 
 particles = {
     pool = {},
-    max_particles = 150
+    max_particles = 250
 }
 
 function particles:init()
@@ -95,6 +95,52 @@ function particles:spawn_explosion(x, y, count, c1, c2, opts)
             p.size = size
             p.gravity = gravity
             p.friction = friction
+        end
+    end
+end
+
+function particles:waterfall(idx, x1, y1, x2, y2)
+    -- tuning parameters
+    local frequency = 0.9  -- Probability per pixel (0-1)
+    local speed = 1
+    local life = 2
+
+    local c1, c2 = P1, P5
+    if idx == 1 then
+        c1, c2 = S1, S5
+    end
+
+
+    -- Calculate line length and direction
+    local dx = x2 - x1
+    local dy = y2 - y1
+    local dist = sqrt(dx * dx + dy * dy)
+
+    -- Iterate through each pixel along the line
+    for i = 0, dist do
+        -- Check random frequency
+        if rnd() < frequency then
+            -- Calculate position along line
+            local t = i / max(dist, 1)
+            local x = x1 + dx * t
+            local y = y1 + dy * t
+
+            -- Get inactive particle
+            local part = self:get_inactive_particle()
+            if part then
+                part.active = true
+                part.x = x
+                part.y = y+1
+                part.vx = -0.2 + rnd(0.4)  -- Small horizontal variance
+                part.vy = speed * (0.8 + rnd(0.4))  -- Downward with variance
+                part.life = life + flr(rnd(5))
+                part.max_life = part.life
+                part.c1 = c1
+                part.c2 = c2
+                part.size = 0
+                part.gravity = true
+                part.friction = 0.98
+            end
         end
     end
 end

@@ -67,6 +67,8 @@ function Player:update()
     -- Reduce shot timing
     self.prox_y1 = max(0, self.prox_y1 - 1)
     self.prox_y2 = max(0, self.prox_y2 - 1)
+
+    particles:waterfall(self.idx, self.x1, self.y1, self.x2, self.y2)
 end
 
 function Player:draw()
