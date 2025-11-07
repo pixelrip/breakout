@@ -1,5 +1,5 @@
 # Dev Log
-Total Time: 29.5hrs
+Total Time: 30.5hrs
 
 ## TODO:
 - Start game with 4 balls
