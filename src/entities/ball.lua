@@ -163,6 +163,60 @@ function Ball:_check_box_collisions()
 end
 
 
+
+
+function Ball:handle_wall_collision(w, collision_info)
+    self:_apply_box_collision(w, collision_info)
+end
+
+function Ball:handle_brick_collision(brick, collision_info)
+    -- Apply collision physics (same as wall)
+
+    if self:_get_speed() > 6 then
+        self:_apply_box_destruction(brick, collision_info)
+    else
+        self:_apply_box_collision(brick, collision_info)
+    end
+
+    brick:on_ball_collision(self:_calculate_damage())
+end
+
+function Ball:_apply_box_destruction(obj, collision_info)
+    -- Fast ball passes through brick with slight velocity reduction
+    if not collision_info then
+        -- Fallback: no CCD data, just reduce velocity
+        self.vx *= 0.85
+        self.vy *= 0.85
+        return
+    end
+
+    -- Use CCD collision time to ensure proper positioning
+    local t = collision_info.t
+
+    -- Get ball velocity this frame
+    local vel_x = self.x - self.prev.x
+    local vel_y = self.y - self.prev.y
+
+    -- Move to collision point
+    self.x = self.prev.x + vel_x * t
+    self.y = self.prev.y + vel_y * t
+
+    -- Reduce velocity slightly (no bounce, just friction/drag)
+    local speed_retention = 0.95 -- Tuning factor: retain 85% of speed
+    self.vx *= speed_retention
+    self.vy *= speed_retention
+    vel_x *= speed_retention
+    vel_y *= speed_retention
+
+    -- Continue with remaining motion (no direction change)
+    local remaining = 1 - t
+    self.x = self.x + vel_x * remaining
+    self.y = self.y + vel_y * remaining
+
+    -- Update bounds after position update
+    self:_update_bounds()
+end
+
 -- Shared collision response for box collisions (walls/bricks)
 function Ball:_apply_box_collision(obj, collision_info)
     -- Handle collision based on collision normal
@@ -225,16 +279,6 @@ function Ball:_apply_box_collision(obj, collision_info)
 
     -- Update bounds after position correction
     self:_update_bounds()
-end
-
-function Ball:handle_wall_collision(w, collision_info)
-    self:_apply_box_collision(w, collision_info)
-end
-
-function Ball:handle_brick_collision(brick, collision_info)
-    -- Apply collision physics (same as wall)
-    self:_apply_box_collision(brick, collision_info)
-    brick:on_ball_collision(self:_calculate_damage())
 end
 
 function Ball:_calculate_damage()
