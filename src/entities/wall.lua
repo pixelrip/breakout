@@ -17,7 +17,6 @@ function Wall.new(opts)
 
     self.w = opts.width or 128
     self.h = opts.height or 128
-    self.color = opts.color or 7
     self.bounce = opts.bounce or 0.9
 
     -- Velocity (for moving walls)
@@ -45,7 +44,8 @@ function Wall:update()
 end
 
 function Wall:draw()
-    rrectfill(self.x, self.y, self.w, self.h, 0, self.color)
+    rrectfill(self.x, self.y, self.w, self.h, 0, P5)
+    rrectfill(self.x+1, self.y+1, self.w-2, self.h-2, 0, P4)
 end
 
 -- "Private" Methods

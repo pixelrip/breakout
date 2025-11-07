@@ -11,23 +11,23 @@ function state_playing:init(players)
   -- add arena walls
   world:add(Wall.new({
     x = 0,
-    y = 0,
-    width = 2,
-    height = 128,
+    y = 7,
+    width = 4,
+    height = 121,
   }), "wall")
 
   world:add(Wall.new({
-    x = 126,
-    y = 0,
-    width = 2,
-    height = 128,
+    x = 124,
+    y = 7,
+    width = 4,
+    height = 121,
   }), "wall")
 
   world:add(Wall.new({
     x = 0,
-    y = 0,
+    y = 7,
     width = 128,
-    height = 2,
+    height = 4,
   }), "wall")
 
   -- add moving wall
@@ -65,8 +65,8 @@ function state_playing:init(players)
   world:add(ball, "ball")
 
   -- add bricks
-  for i = 4,114,10 do
-    for j = 14,39,5 do
+  for i = 14,104,10 do
+    for j = 20,45,5 do
       world:add(Brick.new({
         x = i,
         y = j,
