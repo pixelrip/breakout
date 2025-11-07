@@ -4,6 +4,9 @@ __lua__
 -- breakout clone
 -- by pixelrip
 
+-- Constants
+#include src/constants.lua
+
 -- Helpers
 #include src/utils/helpers.lua
 #include src/utils/collision.lua
