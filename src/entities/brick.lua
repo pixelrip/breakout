@@ -71,8 +71,19 @@ function Brick:on_ball_collision(amount)
 end
 
 function Brick:explode()
-    -- TBD: particle effects, sound, etc 
+    -- TBD: sound, etc
     if self.hp > 0 then return end
+
+    -- Spawn explosion particles
+    local cx = self.x + self.w / 2
+    local cy = self.y + self.h / 2
+    particles:spawn_explosion(
+        cx, cy,
+        12,  -- particle count
+        get_color("p1"),
+        get_color("p5"),
+        {size = 1, speed = 1.5, life = 25, gravity = true, friction = 0.96}
+    )
 
     world:remove(self, "brick")
 end

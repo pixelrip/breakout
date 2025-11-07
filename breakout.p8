@@ -13,6 +13,7 @@ __lua__
 #include src/managers/world.lua
 #include src/managers/game.lua
 #include src/managers/input.lua
+#include src/managers/particle.lua
 
 -- State
 #include src/state/manager.lua

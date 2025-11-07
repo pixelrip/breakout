@@ -74,9 +74,10 @@ function state_playing:init(players)
     end
   end
 
-  -- initialize input and game
+  -- initialize input, game, and particles
   input:init()
   game:reset()
+  particles:init()
 end
 
 function state_playing:update()

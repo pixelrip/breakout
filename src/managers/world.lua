@@ -42,10 +42,12 @@ function world:update()
     for e in all(self.entities) do
         e:update()
     end
+    particles:update()
 end
 
 function world:draw()
     for e in all(self.entities) do
         e:draw()
     end
+    particles:draw()
 end
