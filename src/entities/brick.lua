@@ -74,8 +74,8 @@ function Brick:on_ball_collision(amount)
         particles:spawn_explosion(
             cx, cy,
             amount * 2,  -- particle count
-            get_color("p3"),
-            get_color("p5"),
+            P3,
+            P5,
             {size = 0, speed = 1.0, life = 6, gravity = false, friction = 0.85}
         )
     end
@@ -91,8 +91,8 @@ function Brick:explode()
     particles:spawn_explosion(
         cx, cy,
         12,  -- particle count
-        get_color("p1"),
-        get_color("p5"),
+        P1,
+        P5,
         {size = 1, speed = 1.5, life = 25, gravity = true, friction = 0.96}
     )
 
@@ -118,21 +118,21 @@ function Brick:get_colors_for_hp()
 
     -- FIX: Magic numbers; smelly code
     if hp == 6 then
-        c1 = get_color("white")
-        c2 = get_color("p1")
-        c3 = get_color("p2")
+        c1 = WHITE
+        c2 = P1
+        c3 = P2
     elseif hp >= 4 then
-        c1 = get_color("p1")
-        c2 = get_color("p2")
-        c3 = get_color("p3")
+        c1 = P1
+        c2 = P2
+        c3 = P3
     elseif hp > 2 then
-        c1 = get_color("p2")
-        c2 = get_color("p3")
-        c3 = get_color("p4")
+        c1 = P2
+        c2 = P3
+        c3 = P4
     else
-        c1 = get_color("p3")
-        c2 = get_color("p4")
-        c3 = get_color("p5")
+        c1 = P3
+        c2 = P4
+        c3 = P5
     end
     
     return c1, c2, c3

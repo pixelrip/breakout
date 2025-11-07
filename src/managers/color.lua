@@ -1,24 +1,5 @@
 color = {}
 
-color.c = {
-    black = 0,
-    white = 1,
-    grey = 2,
-    dark_grey = 3,
-    p1 = 4, -- primary
-    p2 = 5,
-    p3 = 6,
-    p4 = 7,
-    p5 = 8,
-    s1 = 9, -- secondary
-    s2 = 10,
-    s3 = 11,
-    s4 = 12,
-    s5 = 13,
-    acc1 = 14,
-    acc2 = 15    
-}
-
 color.sets = {
     -- primary: lime, secondary: red, accent: blue + orange
     base = "0,7,6,5,",
@@ -79,9 +60,4 @@ end
 function color:reset_palette()
     pal()
     pal(self.current,1)
-end
-
--- token helper
-function get_color(n)
-    return color.c[n]
 end

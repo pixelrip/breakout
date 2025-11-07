@@ -20,6 +20,6 @@ function _update()
 end
 
 function _draw()
-  cls(get_color("black"))
+  cls(BLACK)
   state:draw()
 end
