@@ -55,13 +55,22 @@ function Ball:update()
     end
 
     -- Check wall and brick collisions (find earliest)
-    local obj, collision_info, obj_type = self:_check_box_collisions()
-    if obj then
+    -- Loop to handle multiple collisions per frame (for fast ball destruction)
+    local iterations = 0
+    local max_iterations = 5  -- Prevent infinite loops
+    while iterations < max_iterations do
+        local obj, collision_info, obj_type = self:_check_box_collisions()
+        if not obj then break end
+
         if obj_type == "brick" then
             self:handle_brick_collision(obj, collision_info)
+            -- Continue checking for more bricks in path
         elseif obj_type == "wall" then
             self:handle_wall_collision(obj, collision_info)
+            break  -- Walls bounce, so stop checking
         end
+
+        iterations += 1
     end
 
     -- DEBUG: Return ball if off screen
