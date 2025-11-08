@@ -41,7 +41,7 @@ function color:make_palette(level)
     if level == 0 then
         p = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
     elseif level == 1 then
-        p = p .. s.oro .. s.sand .. s.blue_orange
+        p = p .. s.salmon .. s.night .. s.blue_orange
     else
         p = p .. s.smurf .. s.rose .. s.blue_orange
     end
